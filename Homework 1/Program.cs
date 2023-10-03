@@ -25,7 +25,7 @@ public class Shape
 
 class Circle : Shape
 {
-    Circle(int x, int y) : base(x, y)
+    public Circle(int x, int y) : base(x, y)
     {}
 
     public override void Draw()
@@ -37,7 +37,7 @@ class Circle : Shape
 
 class Square : Shape
 {
-    Square(int x, int y) : base(x, y)
+    public Square(int x, int y) : base(x, y)
     {}
 
     public override void Draw()
@@ -49,7 +49,7 @@ class Square : Shape
 
 class Triangle: Shape
 {
-    Triangle(int x, int y) : base(x, y)
+    public Triangle(int x, int y) : base(x, y)
     {}
 
     public override void Draw()
@@ -65,7 +65,14 @@ namespace Homework_1
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hi");
+            Shape[] arr = new Shape[3];
+            arr[0] = new Circle(5, 10);
+            arr[1] = new Square(5, 10);
+            arr[2] = new Triangle(5, 10);
+            foreach (Shape obj in arr)
+            {
+                obj.Draw();
+            }
         }
     }
 }
