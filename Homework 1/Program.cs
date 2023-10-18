@@ -38,7 +38,7 @@ class Circle : Shape
 
     public override bool IsInside(int x, int y)
     {
-        if (Math.Pow(x-this.x, 2) + Math.Pow(y - this.y, 2) < R)
+        if (Math.Pow(x-this.x, 2) + Math.Pow(y - this.y, 2) < R*R)
         {
             return true;
         }
@@ -57,7 +57,7 @@ class Square : Shape
     public override void Draw()
     {
         base.Draw();
-        Console.WriteLine("Suare");
+        Console.WriteLine("Square");
     }
 
     public override bool IsInside(int x, int y)
@@ -131,7 +131,7 @@ namespace Homework_1
             */
 
             Circle cir = new Circle(3, 4);
-            Console.WriteLine(cir.IsInside(3, 5));
+            Console.WriteLine(cir.IsInside(3, 6));
             Square sq = new Square(4, 4);
             Console.WriteLine(sq.IsInside(3, 5));
             Triangle tr = new Triangle(3, 5);
