@@ -35,8 +35,8 @@ namespace Polygons
         public override void Render(DrawingContext drawingContext)
         {
             // объекты "ручка" и "кисть" нужны нам для рисования
-            Pen pen = new Pen(Brushes.Green, 1, lineCap: PenLineCap.Square);
-            Brush brush = new SolidColorBrush(Colors.Black);
+            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+            Brush brush = new SolidColorBrush(Globals.FillColor);
 
             // рисуем фигуру по координатам vertexX, vertexY –
             // у меня просто рисуется окружность, 
