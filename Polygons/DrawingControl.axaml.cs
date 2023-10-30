@@ -17,8 +17,15 @@ namespace Polygons
 
         public void PointerPressed(double x, double y)
         {
-            _vertex.X = x;
-            _vertex.Y = y;
+            if (_vertex.IsInside(x, y))
+            {
+                Console.WriteLine("Inside");
+            }
+            else
+            {
+                _vertex.X = x;
+                _vertex.Y = y;
+            }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
             // в нашем DrawingControl (объекте для рисования).
