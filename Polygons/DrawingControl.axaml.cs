@@ -8,6 +8,8 @@ namespace Polygons
     public partial class DrawingControl : UserControl
     {
         private Vertex _vertex;
+
+        private bool holding;
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
         {
@@ -20,6 +22,7 @@ namespace Polygons
             if (_vertex.IsInside(x, y))
             {
                 Console.WriteLine("Inside");
+                holding = true;
             }
             else
             {
@@ -41,6 +44,28 @@ namespace Polygons
             // после того, как в фигуре что-то поменялось –
             // требуем перерисовать весь контрол. 
             // Этот метод просто вызывает Render, описанный ниже
+        }
+
+        public void PointerMoved(double x, double y)
+        {
+            if (holding)
+            {
+                Console.WriteLine("Drag");
+                _vertex.X = x;
+                _vertex.Y = y;
+            }
+            InvalidateVisual();
+        }
+
+        public void PointerReleased(double x, double y)
+        {
+            Console.WriteLine("Released");
+            if (holding)
+            {
+                Console.WriteLine("Set holding to false");
+                holding = false;
+            }
+            InvalidateVisual();
         }
 
         public override void Render(DrawingContext drawingContext)

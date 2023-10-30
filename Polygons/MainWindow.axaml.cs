@@ -1,10 +1,15 @@
 using Avalonia.Controls;
 using System;
+using Avalonia.Input;
 
 namespace Polygons;
 
 public partial class MainWindow : Window
 {
+    public MainWindow()
+    {
+        InitializeComponent();
+    }
     
     private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
     {
@@ -24,9 +29,15 @@ public partial class MainWindow : Window
         // относящийся уже не к окну, а к контролу – там мы сможем рисовать
     }
 
-    
-    public MainWindow()
+    private void Win_PointerMoved(object? sender, PointerEventArgs e)       //Как и предыдущий, ловит событие (здесь - перемещение курсора) и прокидывает координаты в DrawingControl
     {
-        InitializeComponent();
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.PointerMoved(e.GetPosition(cc).X, e.GetPosition(cc).Y);
+    }
+    
+    private void Win_PointerReleased(object? sender, PointerReleasedEventArgs e)    //Та же аналогия
+    {
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.PointerReleased(e.GetPosition(cc).X, e.GetPosition(cc).Y);
     }
 }

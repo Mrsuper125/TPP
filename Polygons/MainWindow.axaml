@@ -6,6 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Polygons.MainWindow"
         Title="Polygons"
-        PointerPressed="Win_PointerPressed">
+        PointerPressed="Win_PointerPressed"
+        PointerMoved="Win_PointerMoved"
+        PointerReleased="Win_PointerReleased">
         <polygons:DrawingControl Name="MyDrawingControl"></polygons:DrawingControl>
 </Window>
