@@ -1,20 +1,24 @@
 ﻿using Avalonia.Controls;
 using Avalonia;
 using Avalonia.Media;
+using System;
 
 namespace Polygons
 {
     public partial class DrawingControl : UserControl
     {
-        private double vertexX, vertexY;
+        private Vertex _vertex;
         // координаты нашей пока единственной вершины.
-        // вместо этого лучше просто завести вершину, т.е. 
-        // объект типа Circle, Square и Triangle
+        public DrawingControl() : base()
+        {
+            Console.WriteLine("Instantiated");
+            _vertex = new Vertex(0, 0);
+        }
 
         public void PointerPressed(double x, double y)
         {
-            vertexX = x;
-            vertexY = y;
+            _vertex.X = x;
+            _vertex.Y = y;
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
             // в нашем DrawingControl (объекте для рисования).
@@ -37,15 +41,8 @@ namespace Polygons
             // объекты "ручка" и "кисть" нужны нам для рисования
             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
             Brush brush = new SolidColorBrush(Globals.FillColor);
-
-            // рисуем фигуру по координатам vertexX, vertexY –
-            // у меня просто рисуется окружность, 
-            // у вас вместо этого в будущем будет вызываться 
-            // метод Draw соответствующей фигуры,
-            // а drawingcontext будет передаваться ему 
-            // в качестве параметра –
-            // без него мы просто не можем рисовать
-            drawingContext.DrawEllipse(brush, pen, new Point(vertexX, vertexY), 10, 10);
+            
+            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), 10, 10);
         }
     }
 }
