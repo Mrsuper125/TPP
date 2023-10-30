@@ -42,7 +42,7 @@ namespace Polygons
             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
             Brush brush = new SolidColorBrush(Globals.FillColor);
             
-            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), 10, 10);
+            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), Globals.VertexRadius, Globals.VertexRadius);
         }
     }
 }
