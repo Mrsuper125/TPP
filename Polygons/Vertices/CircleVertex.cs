@@ -1,8 +1,8 @@
 ﻿using System;
 
-class Vertex : Shape
+class CircleVertex : Shape
 {
-    public Vertex(double x, double y) : base(x, y)
+    public CircleVertex(double x, double y) : base(x, y)
     {
     }
 

@@ -7,27 +7,27 @@ namespace Polygons
 {
     public partial class DrawingControl : UserControl
     {
-        private Vertex _vertex;
+        private CircleVertex _circleVertex;
 
         private bool holding;
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
         {
             Console.WriteLine("Instantiated");
-            _vertex = new Vertex(0, 0);
+            _circleVertex = new CircleVertex(0, 0);
         }
 
         public void PointerPressed(double x, double y)
         {
-            if (_vertex.IsInside(x, y))
+            if (_circleVertex.IsInside(x, y))
             {
                 Console.WriteLine("Inside");
                 holding = true;
             }
             else
             {
-                _vertex.X = x;
-                _vertex.Y = y;
+                _circleVertex.X = x;
+                _circleVertex.Y = y;
             }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
@@ -51,8 +51,8 @@ namespace Polygons
             if (holding)
             {
                 Console.WriteLine("Drag");
-                _vertex.X = x;
-                _vertex.Y = y;
+                _circleVertex.X = x;
+                _circleVertex.Y = y;
             }
             InvalidateVisual();
         }
@@ -73,8 +73,7 @@ namespace Polygons
             // объекты "ручка" и "кисть" нужны нам для рисования
             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
             Brush brush = new SolidColorBrush(Globals.FillColor);
-            
-            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), Globals.VertexRadius, Globals.VertexRadius);
+            drawingContext.DrawEllipse(brush, pen, new Point(_circleVertex.X, _circleVertex.Y), Globals.VertexRadius, Globals.VertexRadius);
         }
     }
 }
