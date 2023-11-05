@@ -10,9 +10,9 @@ public enum VertexShape         //Enum с перечислением верши�
 
 public static class Globals                 //Этот класс является временным костылём исключительно для облегчения разработки. Сюда я вынесу всякие настройки, по типу цвета, радиуса и т.д. Выпиливать его будет несложно, ведь можно просто пробежаться повсюду через Ctrl+F и позаменять. Выпиливаться он будет постепенно, по мере изучения делегатов и т.д.
 {
-    public static readonly int VertexRadius = 10;
+    public static readonly int VertexRadius = 25;
     public static readonly IImmutableSolidColorBrush BrushColor = Brushes.Green;
     public static readonly Color FillColor = Colors.Black;
-    public static readonly VertexShape VertexShape = VertexShape.Circle;
+    public static readonly VertexShape VertexShape = VertexShape.Square;
 
 }

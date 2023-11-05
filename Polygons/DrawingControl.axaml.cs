@@ -19,6 +19,9 @@ namespace Polygons
                 case VertexShape.Circle:
                     _vertex = new CircleVertex(0, 0);       
                     break;
+                case VertexShape.Square:
+                    _vertex = new SquareVertex(0, 0);
+                    break;
                 default:
                     throw new Exception("Wrong vertex shape");
             }
@@ -83,12 +86,23 @@ namespace Polygons
             drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), Globals.VertexRadius, Globals.VertexRadius);
         }
 
+        public void DrawSquare(DrawingContext drawingContext)
+        {
+            SquareVertex vertex = (SquareVertex)_vertex;
+            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+            Brush brush = new SolidColorBrush(Globals.FillColor);
+            drawingContext.DrawRectangle(brush, pen, new Rect(_vertex.X, _vertex.Y, vertex.halfWidht, vertex.halfWidht));
+        }
+
         public override void Render(DrawingContext drawingContext)
         {
             switch (Globals.VertexShape)                            //Берём из глобалсов тип фигуры и вызываем соответствующий метод рисования, который берёт данные из глобалсов и полей фигуры. Что-то не так с типом - Exception.
             {
                 case VertexShape.Circle:
                     DrawCircle(drawingContext);
+                    break;
+                case VertexShape.Square:
+                    DrawSquare(drawingContext);
                     break;
                 default:
                     throw new Exception("Wrong vertex shape");
