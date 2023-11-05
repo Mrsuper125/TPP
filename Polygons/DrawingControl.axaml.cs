@@ -7,27 +7,34 @@ namespace Polygons
 {
     public partial class DrawingControl : UserControl
     {
-        private CircleVertex _circleVertex;
+        private Shape _vertex;
 
-        private bool holding;
+        private bool _holding;
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
         {
             Console.WriteLine("Instantiated");
-            _circleVertex = new CircleVertex(0, 0);
+            switch (Globals.VertexShape)            //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+            {
+                case VertexShape.Circle:
+                    _vertex = new CircleVertex(0, 0);       
+                    break;
+                default:
+                    throw new Exception("Wrong vertex shape");
+            }
         }
 
         public void PointerPressed(double x, double y)
         {
-            if (_circleVertex.IsInside(x, y))
+            if (_vertex.IsInside(x, y))
             {
                 Console.WriteLine("Inside");
-                holding = true;
+                _holding = true;
             }
             else
             {
-                _circleVertex.X = x;
-                _circleVertex.Y = y;
+                _vertex.X = x;
+                _vertex.Y = y;
             }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
@@ -48,11 +55,11 @@ namespace Polygons
 
         public void PointerMoved(double x, double y)
         {
-            if (holding)
+            if (_holding)
             {
                 Console.WriteLine("Drag");
-                _circleVertex.X = x;
-                _circleVertex.Y = y;
+                _vertex.X = x;
+                _vertex.Y = y;
             }
             InvalidateVisual();
         }
@@ -60,20 +67,32 @@ namespace Polygons
         public void PointerReleased(double x, double y)
         {
             Console.WriteLine("Released");
-            if (holding)
+            if (_holding)
             {
                 Console.WriteLine("Set holding to false");
-                holding = false;
+                _holding = false;
             }
             InvalidateVisual();
         }
 
-        public override void Render(DrawingContext drawingContext)
+        public void DrawCircle(DrawingContext drawingContext)               //Рисование круга в отдельной функции. Ничего необычного, просто круг по данным из Globals и _vertex
         {
             // объекты "ручка" и "кисть" нужны нам для рисования
             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
             Brush brush = new SolidColorBrush(Globals.FillColor);
-            drawingContext.DrawEllipse(brush, pen, new Point(_circleVertex.X, _circleVertex.Y), Globals.VertexRadius, Globals.VertexRadius);
+            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), Globals.VertexRadius, Globals.VertexRadius);
+        }
+
+        public override void Render(DrawingContext drawingContext)
+        {
+            switch (Globals.VertexShape)                            //Берём из глобалсов тип фигуры и вызываем соответствующий метод рисования, который берёт данные из глобалсов и полей фигуры. Что-то не так с типом - Exception.
+            {
+                case VertexShape.Circle:
+                    DrawCircle(drawingContext);
+                    break;
+                default:
+                    throw new Exception("Wrong vertex shape");
+            }
         }
     }
 }
