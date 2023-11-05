@@ -4,36 +4,54 @@ namespace Polygons;
 
 class TriangleVertex: Shape
 {
-    public readonly double TopVertexX;
-    public readonly double TopVertexY;
-    public readonly double LeftVertexX;
-    public readonly double LeftVertexY;
-    public readonly double RightVertexX;
-    public readonly double RightVertexY;
+    private double _topVertexX;
+    private double _topVertexY;
+    private double _leftVertexX;
+    private double _leftVertexY;
+    private double _rightVertexX;
+    private double _rightVertexY;
+
+    public double TopVertexX => _topVertexX;
+
+    public double TopVertexY => _topVertexY;
+
+    public double LeftVertexX => _leftVertexX;
+
+    public double LeftVertexY => _leftVertexY;
+
+    public double RightVertexX => _rightVertexX;
+
+    public double RightVertexY => _rightVertexY;
+    
 
     public TriangleVertex(double x, double y) : base(x, y)
     {
-        TopVertexX = this.x;
-        TopVertexY = this.y + VertexRadius;
-        LeftVertexX = this.x - Math.Cos(0.523599d) * VertexRadius;
-        LeftVertexY = this.y - Math.Sin(0.523599d) * VertexRadius;
-        RightVertexX = this.x + Math.Cos(0.523599d) * VertexRadius;
-        RightVertexY = LeftVertexY;
+        InvalidateVertices();
+    }
+
+    public void InvalidateVertices()
+    {
+        _topVertexX = this.x;
+        _topVertexY = this.y + VertexRadius;
+        _leftVertexX = this.x - Math.Cos(0.523599d) * VertexRadius;
+        _leftVertexY = this.y - Math.Sin(0.523599d) * VertexRadius;
+        _rightVertexX = this.x + Math.Cos(0.523599d) * VertexRadius;
+        _rightVertexY = _leftVertexY;
     }
 
     public override bool IsInside(double x, double y)
     {
-        if (!((y - LeftVertexY)/(TopVertexY - LeftVertexY) < (x - LeftVertexX)/(TopVertexX - LeftVertexX)))  //длинное страншное неравенство, проверяющее нахождение точки под прямой. Инвертируется для того, чтобы отловить неподходящие точки
+        if (!((y - _leftVertexY)/(_topVertexY - _leftVertexY) < (x - _leftVertexX)/(_topVertexX - _leftVertexX)))  //длинное страншное неравенство, проверяющее нахождение точки под прямой. Инвертируется для того, чтобы отловить неподходящие точки
         {
             return false;
         }
         
-        if (!((y - RightVertexY)/(TopVertexY - RightVertexY) < (x - RightVertexX)/(TopVertexX - RightVertexX)))  //длинное страншное неравенство, проверяющее нахождение точки под прямой. Инвертируется для того, чтобы отловить неподходящие точки
+        if (!((y - _rightVertexY)/(_topVertexY - _rightVertexY) < (x - _rightVertexX)/(_topVertexX - _rightVertexX)))  //длинное страншное неравенство, проверяющее нахождение точки под прямой. Инвертируется для того, чтобы отловить неподходящие точки
         {
             return false;
         }
 
-        if (y < RightVertexY)
+        if (y < _rightVertexY)
         {
             return false;
         }

@@ -22,6 +22,9 @@ namespace Polygons
                 case VertexShape.Square:
                     _vertex = new SquareVertex(0, 0);
                     break;
+                case VertexShape.Triangle:
+                    _vertex = new TriangleVertex(0, 0);
+                    break;
                 default:
                     throw new Exception("Wrong vertex shape");
             }
@@ -38,6 +41,11 @@ namespace Polygons
             {
                 _vertex.X = x;
                 _vertex.Y = y;
+                if (Globals.VertexShape == VertexShape.Triangle)
+                {
+                    TriangleVertex vertex = (TriangleVertex)_vertex;
+                    vertex.InvalidateVertices();
+                }
             }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
@@ -63,6 +71,11 @@ namespace Polygons
                 Console.WriteLine("Drag");
                 _vertex.X = x;
                 _vertex.Y = y;
+                if (Globals.VertexShape == VertexShape.Triangle)
+                {
+                    TriangleVertex vertex = (TriangleVertex)_vertex;
+                    vertex.InvalidateVertices();
+                }
             }
             InvalidateVisual();
         }
@@ -94,6 +107,14 @@ namespace Polygons
             drawingContext.DrawRectangle(brush, pen, new Rect(_vertex.X, _vertex.Y, vertex.halfWidht, vertex.halfWidht));
         }
 
+        public void DrawTriangle(DrawingContext drawingContext)
+        {
+            TriangleVertex vertex = (TriangleVertex)_vertex;
+            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+            Brush brush = new SolidColorBrush(Globals.FillColor);
+            drawingContext.DrawGeometry(brush, pen, new PolylineGeometry(new Point[4]{new Point(vertex.LeftVertexX, vertex.LeftVertexY), new Point(vertex.TopVertexX, vertex.TopVertexY), new Point(vertex.RightVertexX, vertex.RightVertexY), new Point(vertex.LeftVertexX, vertex.LeftVertexY)}, false));
+        }
+
         public override void Render(DrawingContext drawingContext)
         {
             switch (Globals.VertexShape)                            //Берём из глобалсов тип фигуры и вызываем соответствующий метод рисования, который берёт данные из глобалсов и полей фигуры. Что-то не так с типом - Exception.
@@ -103,6 +124,9 @@ namespace Polygons
                     break;
                 case VertexShape.Square:
                     DrawSquare(drawingContext);
+                    break;
+                case VertexShape.Triangle:
+                    DrawTriangle(drawingContext);
                     break;
                 default:
                     throw new Exception("Wrong vertex shape");
