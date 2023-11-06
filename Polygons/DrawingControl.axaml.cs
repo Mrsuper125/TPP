@@ -7,7 +7,7 @@ namespace Polygons
 {
     public partial class DrawingControl : UserControl
     {
-        private Shape _vertex;
+        private Shape _vertex;      //TODO: получше закомментить код
 
         private bool _holding;
         // координаты нашей пока единственной вершины.
@@ -63,8 +63,7 @@ namespace Polygons
             // требуем перерисовать весь контрол. 
             // Этот метод просто вызывает Render, описанный ниже
         }
-
-        public void PointerMoved(double x, double y)
+         public void PointerMoved(double x, double y)
         {
             if (_holding)
             {
@@ -73,7 +72,7 @@ namespace Polygons
                 _vertex.Y = y;
                 if (Globals.VertexShape == VertexShape.Triangle)
                 {
-                    TriangleVertex vertex = (TriangleVertex)_vertex;
+                    TriangleVertex vertex = (TriangleVertex)_vertex;        //TODO: починить телепортацию фигуры при перетягивании
                     vertex.InvalidateVertices();
                 }
             }

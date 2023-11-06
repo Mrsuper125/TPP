@@ -32,7 +32,7 @@ class TriangleVertex: Shape
     public void InvalidateVertices()
     {
         _topVertexX = this.x;
-        _topVertexY = this.y + VertexRadius;
+        _topVertexY = this.y + VertexRadius;                            //TODO: Перевернуть треугольник
         _leftVertexX = this.x - Math.Cos(0.523599d) * VertexRadius;
         _leftVertexY = this.y - Math.Sin(0.523599d) * VertexRadius;
         _rightVertexX = this.x + Math.Cos(0.523599d) * VertexRadius;
