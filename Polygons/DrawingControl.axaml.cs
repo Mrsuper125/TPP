@@ -10,9 +10,9 @@ namespace Polygons
     {      //TODO: получше закомментить код
 
         private List<Shape> vertices;
-        private Shape? current = null;
+        private List<Shape> heldVeritces;
         
-        private double _previousX;
+        private double _previousX;      //В эти переменные записываются предыдущие координаты курсора для вычисления дельты
         private double _previousY;
 
         private bool _holding;
@@ -22,38 +22,40 @@ namespace Polygons
             Console.WriteLine("Instantiated");
 
             vertices = new List<Shape>();
+            heldVeritces = new List<Shape>();       //Списки для всех вершин и для удерживаемых в данный момент вершин
         }
 
         public void PointerPressed(double x, double y)
         {
-            foreach (Shape vertex in vertices)
+            foreach (Shape vertex in vertices)      //Проверяем все вершины на предмет клика внутри них
             {
                 if (vertex.IsInside(x, y))
                 {
                     Console.WriteLine("Inside");
                     _holding = true;
-                    _previousX = x;
+                    _previousX = x;         //Если хотя бы одна вершина захвачена, начинаем фиксировать координаты и добавляем в список двигаемых першин
                     _previousY = y;
-                    current = vertex;
-                    InvalidateVisual();
-                    return;
+                    heldVeritces.Add(vertex);       //Добавляем ссылку на объект вершины в список удерживаемых
                 }
             }
 
-            switch
-                (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+            if (heldVeritces.Count == 0)        //Если ни одну вершину не захватили, создаём новую
             {
-                case VertexShape.Circle:
-                    vertices.Add(new CircleVertex(x, y));
-                    break;
-                case VertexShape.Square:
-                    vertices.Add(new SquareVertex(x, y));
-                    break;
-                case VertexShape.Triangle:
-                    vertices.Add(new TriangleVertex(x, y));
-                    break;
-                default:
-                    throw new Exception("Wrong vertex shape");
+                switch
+                    (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+                {
+                    case VertexShape.Circle:
+                        vertices.Add(new CircleVertex(x, y));
+                        break;
+                    case VertexShape.Square:
+                        vertices.Add(new SquareVertex(x, y));
+                        break;
+                    case VertexShape.Triangle:
+                        vertices.Add(new TriangleVertex(x, y));
+                        break;
+                    default:
+                        throw new Exception("Wrong vertex shape");
+                }
             }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
@@ -73,16 +75,16 @@ namespace Polygons
         }
          public void PointerMoved(double x, double y)
         {
-            if (_holding)
+            if (_holding)           //Если удерживаем хоть одну вершину, высчитываем движение
             {
                 Console.WriteLine("Drag");
-                current.X = x;
-                current.Y = y;
-                if (Globals.VertexShape == VertexShape.Triangle)
+                foreach (Shape vertex in heldVeritces)      //Проходимся по списку ужерживаемых вершин. Классы ссылочные, поэтому объекты изменятся везде, где используются
                 {
-                    TriangleVertex vertex = (TriangleVertex)current;        //TODO: починить телепортацию фигуры при перетягивании
-                    vertex.InvalidateVertices();
+                    vertex.X += x - _previousX;
+                    vertex.Y += y - _previousY;
                 }
+                _previousX = x;
+                _previousY = y;
             }
             InvalidateVisual();
         }
@@ -94,7 +96,7 @@ namespace Polygons
             {
                 Console.WriteLine("Set holding to false");
                 _holding = false;
-                current = null;
+                heldVeritces = new List<Shape>();
             }
             InvalidateVisual();
         }

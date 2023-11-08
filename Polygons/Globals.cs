@@ -13,6 +13,6 @@ public static class Globals                 //Этот класс являетс
     public static readonly int VertexRadius = 25;
     public static readonly IImmutableSolidColorBrush BrushColor = Brushes.Green;
     public static readonly Color FillColor = Colors.Black;
-    public static readonly VertexShape VertexShape = VertexShape.Triangle;
+    public static readonly VertexShape VertexShape = VertexShape.Circle;
 
 }
