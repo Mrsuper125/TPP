@@ -2,12 +2,16 @@
 using Avalonia;
 using Avalonia.Media;
 using System;
+using System.Collections.Generic;
 
 namespace Polygons
 {
     public partial class DrawingControl : UserControl
-    {
-        private Shape _vertex;      //TODO: получше закомментить код
+    {      //TODO: получше закомментить код
+
+        private List<Shape> vertices;
+        private Shape? current = null;
+        
         private double _previousX;
         private double _previousY;
 
@@ -16,40 +20,40 @@ namespace Polygons
         public DrawingControl() : base()
         {
             Console.WriteLine("Instantiated");
-            switch (Globals.VertexShape)            //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
-            {
-                case VertexShape.Circle:
-                    _vertex = new CircleVertex(0, 0);       
-                    break;
-                case VertexShape.Square:
-                    _vertex = new SquareVertex(0, 0);
-                    break;
-                case VertexShape.Triangle:
-                    _vertex = new TriangleVertex(0, 0);
-                    break;
-                default:
-                    throw new Exception("Wrong vertex shape");
-            }
+
+            vertices = new List<Shape>();
         }
 
         public void PointerPressed(double x, double y)
         {
-            if (_vertex.IsInside(x, y))
+            foreach (Shape vertex in vertices)
             {
-                Console.WriteLine("Inside");
-                _holding = true;
-                _previousX = x;
-                _previousY = y;
-            }
-            else
-            {
-                _vertex.X = x;
-                _vertex.Y = y;
-                if (Globals.VertexShape == VertexShape.Triangle)
+                if (vertex.IsInside(x, y))
                 {
-                    TriangleVertex vertex = (TriangleVertex)_vertex;
-                    vertex.InvalidateVertices();
+                    Console.WriteLine("Inside");
+                    _holding = true;
+                    _previousX = x;
+                    _previousY = y;
+                    current = vertex;
+                    InvalidateVisual();
+                    return;
                 }
+            }
+
+            switch
+                (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+            {
+                case VertexShape.Circle:
+                    vertices.Add(new CircleVertex(x, y));
+                    break;
+                case VertexShape.Square:
+                    vertices.Add(new SquareVertex(x, y));
+                    break;
+                case VertexShape.Triangle:
+                    vertices.Add(new TriangleVertex(x, y));
+                    break;
+                default:
+                    throw new Exception("Wrong vertex shape");
             }
             // по сути, этот метод теперь заменяет нам 
             // обработку события PointerPressed
@@ -72,13 +76,11 @@ namespace Polygons
             if (_holding)
             {
                 Console.WriteLine("Drag");
-                _vertex.X += x-_previousX;
-                _vertex.Y += y-_previousY;
-                _previousX = x;
-                _previousY = y;
+                current.X = x;
+                current.Y = y;
                 if (Globals.VertexShape == VertexShape.Triangle)
                 {
-                    TriangleVertex vertex = (TriangleVertex)_vertex;        //TODO: починить телепортацию фигуры при перетягивании
+                    TriangleVertex vertex = (TriangleVertex)current;        //TODO: починить телепортацию фигуры при перетягивании
                     vertex.InvalidateVertices();
                 }
             }
@@ -92,13 +94,17 @@ namespace Polygons
             {
                 Console.WriteLine("Set holding to false");
                 _holding = false;
+                current = null;
             }
             InvalidateVisual();
         }
 
         public override void Render(DrawingContext drawingContext)
         {
-            _vertex.Draw(drawingContext);
+            foreach (Shape vertex in vertices)
+            {
+                vertex.Draw(drawingContext);
+            }
         }
     }
 }
