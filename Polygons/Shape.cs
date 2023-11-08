@@ -7,6 +7,8 @@ public abstract class Shape
     protected double x;
     protected double y;
 
+    public bool IsHeld;
+
     static Shape()
     {
         VertexRadius = Globals.VertexRadius;

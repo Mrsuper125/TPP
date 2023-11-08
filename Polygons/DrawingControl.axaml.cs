@@ -10,7 +10,6 @@ namespace Polygons
     {      //TODO: получше закомментить код
 
         private List<Shape> vertices;
-        private List<Shape> heldVeritces;
         
         private double _previousX;      //В эти переменные записываются предыдущие координаты курсора для вычисления дельты
         private double _previousY;
@@ -21,8 +20,7 @@ namespace Polygons
         {
             Console.WriteLine("Instantiated");
 
-            vertices = new List<Shape>();
-            heldVeritces = new List<Shape>();       //Списки для всех вершин и для удерживаемых в данный момент вершин
+            vertices = new List<Shape>(); //Список для всех вершин
         }
 
         public void PointerPressed(double x, double y)
@@ -33,13 +31,13 @@ namespace Polygons
                 {
                     Console.WriteLine("Inside");
                     _holding = true;
-                    _previousX = x;         //Если хотя бы одна вершина захвачена, начинаем фиксировать координаты и добавляем в список двигаемых першин
+                    _previousX = x;         //Если хотя бы одна вершина захвачена, начинаем фиксировать координаты
                     _previousY = y;
-                    heldVeritces.Add(vertex);       //Добавляем ссылку на объект вершины в список удерживаемых
+                    vertex.IsHeld = true; //Записываем в поля вершины то, что мы её удерживаем
                 }
             }
 
-            if (heldVeritces.Count == 0)        //Если ни одну вершину не захватили, создаём новую
+            if (!_holding)        //Если ни одну вершину не захватили, создаём новую
             {
                 switch
                     (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
@@ -78,10 +76,13 @@ namespace Polygons
             if (_holding)           //Если удерживаем хоть одну вершину, высчитываем движение
             {
                 Console.WriteLine("Drag");
-                foreach (Shape vertex in heldVeritces)      //Проходимся по списку ужерживаемых вершин. Классы ссылочные, поэтому объекты изменятся везде, где используются
+                foreach (Shape vertex in vertices)      //Проходимся по списку вершин. Если она удерживается - двигаем
                 {
-                    vertex.X += x - _previousX;
-                    vertex.Y += y - _previousY;
+                    if (vertex.IsHeld)
+                    {
+                        vertex.X += x - _previousX;         //Высчитываем дельту через текущую и предыдущую позиции курсора
+                        vertex.Y += y - _previousY;
+                    }
                 }
                 _previousX = x;
                 _previousY = y;
@@ -96,7 +97,10 @@ namespace Polygons
             {
                 Console.WriteLine("Set holding to false");
                 _holding = false;
-                heldVeritces = new List<Shape>();
+                foreach (Shape vertex in vertices)
+                {
+                    vertex.IsHeld = false;      //Гарантированно отпускаем все вершины
+                }
             }
             InvalidateVisual();
         }
