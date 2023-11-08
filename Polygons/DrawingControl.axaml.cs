@@ -96,46 +96,9 @@ namespace Polygons
             InvalidateVisual();
         }
 
-        public void DrawCircle(DrawingContext drawingContext)               //Рисование круга в отдельной функции. Ничего необычного, просто круг по данным из Globals и _vertex
-        {
-            // объекты "ручка" и "кисть" нужны нам для рисования
-            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
-            Brush brush = new SolidColorBrush(Globals.FillColor);
-            drawingContext.DrawEllipse(brush, pen, new Point(_vertex.X, _vertex.Y), Globals.VertexRadius, Globals.VertexRadius);
-        }
-
-        public void DrawSquare(DrawingContext drawingContext)
-        {
-            SquareVertex vertex = (SquareVertex)_vertex;
-            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
-            Brush brush = new SolidColorBrush(Globals.FillColor);
-            drawingContext.DrawRectangle(brush, pen, new Rect(_vertex.X, _vertex.Y, vertex.halfWidht, vertex.halfWidht));
-        }
-
-        public void DrawTriangle(DrawingContext drawingContext)
-        {
-            TriangleVertex vertex = (TriangleVertex)_vertex;
-            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
-            Brush brush = new SolidColorBrush(Globals.FillColor);
-            drawingContext.DrawGeometry(brush, pen, new PolylineGeometry(new Point[4]{new Point(vertex.LeftVertexX, vertex.LeftVertexY), new Point(vertex.TopVertexX, vertex.TopVertexY), new Point(vertex.RightVertexX, vertex.RightVertexY), new Point(vertex.LeftVertexX, vertex.LeftVertexY)}, false));
-        }
-
         public override void Render(DrawingContext drawingContext)
         {
-            switch (Globals.VertexShape)                            //Берём из глобалсов тип фигуры и вызываем соответствующий метод рисования, который берёт данные из глобалсов и полей фигуры. Что-то не так с типом - Exception.
-            {
-                case VertexShape.Circle:
-                    DrawCircle(drawingContext);
-                    break;
-                case VertexShape.Square:
-                    DrawSquare(drawingContext);
-                    break;
-                case VertexShape.Triangle:
-                    DrawTriangle(drawingContext);
-                    break;
-                default:
-                    throw new Exception("Wrong vertex shape");
-            }
+            _vertex.Draw(drawingContext);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using Avalonia;
+using Avalonia.Media;
 
 namespace Polygons;
 
@@ -57,5 +59,12 @@ class TriangleVertex: Shape
         }
 
         return true;
+    }
+
+    public override void Draw(DrawingContext drawingContext)
+    {
+        Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+        Brush brush = new SolidColorBrush(Globals.FillColor);
+        drawingContext.DrawGeometry(brush, pen, new PolylineGeometry(new Point[4]{new Point(this.LeftVertexX, this.LeftVertexY), new Point(this.TopVertexX, this.TopVertexY), new Point(this.RightVertexX, this.RightVertexY), new Point(this.LeftVertexX, this.LeftVertexY)}, false));
     }
 }

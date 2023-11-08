@@ -1,4 +1,5 @@
-﻿using Polygons;
+﻿using Avalonia.Media;
+using Polygons;
 
 public abstract class Shape
 {
@@ -33,7 +34,7 @@ public abstract class Shape
     {
         get
         {
-            return y;
+            return y;;
         }
         set
         {
@@ -42,4 +43,6 @@ public abstract class Shape
     }
 
     public abstract bool IsInside(double x, double y);
+
+    public abstract void Draw(DrawingContext drawingContext);
 }
