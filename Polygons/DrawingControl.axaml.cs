@@ -8,6 +8,8 @@ namespace Polygons
     public partial class DrawingControl : UserControl
     {
         private Shape _vertex;      //TODO: получше закомментить код
+        private double _previousX;
+        private double _previousY;
 
         private bool _holding;
         // координаты нашей пока единственной вершины.
@@ -36,6 +38,8 @@ namespace Polygons
             {
                 Console.WriteLine("Inside");
                 _holding = true;
+                _previousX = x;
+                _previousY = y;
             }
             else
             {
@@ -68,8 +72,10 @@ namespace Polygons
             if (_holding)
             {
                 Console.WriteLine("Drag");
-                _vertex.X = x;
-                _vertex.Y = y;
+                _vertex.X += x-_previousX;
+                _vertex.Y += y-_previousY;
+                _previousX = x;
+                _previousY = y;
                 if (Globals.VertexShape == VertexShape.Triangle)
                 {
                     TriangleVertex vertex = (TriangleVertex)_vertex;        //TODO: починить телепортацию фигуры при перетягивании
