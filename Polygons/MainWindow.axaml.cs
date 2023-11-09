@@ -20,13 +20,23 @@ public partial class MainWindow : Window
         // нам нужен объект (переменная), ссылающийся на наш контрол.
         // для этого воспользуемся методом Find и найдем его по имени myCC
 
-        cc.PointerPressed (e.GetPosition(cc).X, e.GetPosition(cc).Y);
-        // при помощи GetPosition приводим координаты курсора 
-        // в систему координат нашего контрола для рисования
-        // передав его (cc) в качестве параметра
+        
+        if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
+        {
+            cc.LeftPointerPressed (e.GetPosition(cc).X, e.GetPosition(cc).Y);
+            
+            // при помощи GetPosition приводим координаты курсора 
+            // в систему координат нашего контрола для рисования
+            // передав его (cc) в качестве параметра
+            
+            // А затем просто вызываем созданный выше метод PointerPressed, 
+            // относящийся уже не к окну, а к контролу – там мы сможем рисовать
 
-        // А затем просто вызываем созданный выше метод PointerPressed, 
-        // относящийся уже не к окну, а к контролу – там мы сможем рисовать
+        }
+        if (e.GetCurrentPoint(null).Properties.IsRightButtonPressed)
+        {
+            cc.RigthPointerPressed(e.GetPosition(cc).X, e.GetPosition(cc).Y);
+        }
     }
 
     private void Win_PointerMoved(object? sender, PointerEventArgs e)       //Как и предыдущий, ловит событие (здесь - перемещение курсора) и прокидывает координаты в DrawingControl

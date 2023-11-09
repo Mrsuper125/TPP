@@ -23,7 +23,7 @@ namespace Polygons
             vertices = new List<Shape>(); //Список для всех вершин
         }
 
-        public void PointerPressed(double x, double y)
+        public void LeftPointerPressed(double x, double y)
         {
             foreach (Shape vertex in vertices)      //Проверяем все вершины на предмет клика внутри них
             {
@@ -71,6 +71,12 @@ namespace Polygons
             // требуем перерисовать весь контрол. 
             // Этот метод просто вызывает Render, описанный ниже
         }
+
+        public void RigthPointerPressed(double x, double y)
+        {
+            throw new NotImplementedException();
+        }
+        
          public void PointerMoved(double x, double y)
         {
             if (_holding)           //Если удерживаем хоть одну вершину, высчитываем движение
