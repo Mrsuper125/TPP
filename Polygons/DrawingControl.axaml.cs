@@ -74,7 +74,16 @@ namespace Polygons
 
         public void RigthPointerPressed(double x, double y)
         {
-            throw new NotImplementedException();
+            for (int i = vertices.Count - 1; i >= 0; i--)           //Перебор в обратном порядке, т.к. верхние фигуры рендерятся последними
+            {
+                Shape vertex = vertices[i];
+                if (vertex.IsInside(x, y))
+                {
+                    vertices.RemoveAt(i);       //Попали - удаляем из списка, тогда рендер просто не нарисует её
+                    break;
+                }
+            }
+            InvalidateVisual();
         }
         
          public void PointerMoved(double x, double y)
