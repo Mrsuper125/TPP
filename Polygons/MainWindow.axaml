@@ -9,5 +9,18 @@
         PointerPressed="Win_PointerPressed"
         PointerMoved="Win_PointerMoved"
         PointerReleased="Win_PointerReleased">
-        <polygons:DrawingControl Name="MyDrawingControl"></polygons:DrawingControl>
+    <Grid>
+        <polygons:DrawingControl Name="MyDrawingControl" ZIndex="1"></polygons:DrawingControl>
+        <DockPanel Height="32" VerticalAlignment="Top">
+            <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="New"></MenuItem>
+                    <MenuItem Header="Open"></MenuItem>
+                    <MenuItem Header="Save as"></MenuItem>
+                    <MenuItem Header="Save"></MenuItem>
+                    <MenuItem Header="Exit"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+    </Grid>
 </Window>

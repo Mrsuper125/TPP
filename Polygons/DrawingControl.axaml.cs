@@ -80,6 +80,7 @@ namespace Polygons
                 if (vertex.IsInside(x, y))
                 {
                     vertices.RemoveAt(i);       //Попали - удаляем из списка, тогда рендер просто не нарисует её
+                    Console.WriteLine("Deleted");
                     break;
                 }
             }
