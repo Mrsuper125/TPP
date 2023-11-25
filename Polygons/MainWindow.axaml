@@ -14,11 +14,11 @@
         <DockPanel Height="32" VerticalAlignment="Top">
             <Menu DockPanel.Dock="Top" VerticalAlignment="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="New"></MenuItem>
-                    <MenuItem Header="Open"></MenuItem>
-                    <MenuItem Header="Save as"></MenuItem>
-                    <MenuItem Header="Save"></MenuItem>
-                    <MenuItem Header="Exit"></MenuItem>
+                    <MenuItem Header="New" PointerPressed="Menu_OnClick"></MenuItem>
+                    <MenuItem Header="Open" PointerPressed="Menu_OnClick"></MenuItem>
+                    <MenuItem Header="Save as" PointerPressed="Menu_OnClick"></MenuItem>
+                    <MenuItem Header="Save" PointerPressed="Menu_OnClick"></MenuItem>
+                    <MenuItem Header="Exit" PointerPressed="Menu_OnClick"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
