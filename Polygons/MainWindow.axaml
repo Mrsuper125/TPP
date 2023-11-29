@@ -20,6 +20,11 @@
                     <MenuItem Header="Save" PointerPressed="Menu_OnClick"></MenuItem>
                     <MenuItem Header="Exit" PointerPressed="Menu_OnClick"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="_Shape">
+                    <MenuItem Header="Triangle" PointerPressed="Menu_TriangleSelect"></MenuItem>
+                    <MenuItem Header="Square" PointerPressed="Menu_SquareSelect"></MenuItem>
+                    <MenuItem Header="Circle" PointerPressed="Menu_CircleSelect"></MenuItem>
+                </MenuItem>
             </Menu>
         </DockPanel>
     </Grid>

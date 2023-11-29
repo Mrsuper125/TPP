@@ -13,13 +13,31 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
-    
+
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
     {
-        IsClickOnUI = true;         //Пока что общий плейсхолдерный перехватчик UI-шных кликов
+        IsClickOnUI = true; //Пока что общий плейсхолдерный перехватчик UI-шных кликов
+    }
+
+    private void Menu_TriangleSelect(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        Globals.VertexShape = VertexShape.Triangle;
     }
     
-    private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void Menu_CircleSelect(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        Globals.VertexShape = VertexShape.Circle;
+    }
+    
+    private void Menu_SquareSelect(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        Globals.VertexShape = VertexShape.Square;
+    }
+
+private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
     {
         Console.WriteLine("CLICK"); 
         // отладочная печать – просто проверить, что метод вызвался при клике
