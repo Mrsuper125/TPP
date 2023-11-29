@@ -118,6 +118,7 @@ namespace Polygons
                     vertex.IsHeld = false;      //Гарантированно отпускаем все вершины
                 }
             }
+            
             InvalidateVisual();
         }
 
@@ -126,6 +127,44 @@ namespace Polygons
             foreach (Shape vertex in vertices)
             {
                 vertex.Draw(drawingContext);
+            }
+            
+            if (vertices.Count >= 3)
+            {
+                for (int i = 0; i < vertices.Count - 1; i++)
+                {
+                    for (int j = i+1; j < vertices.Count; j++)
+                    {
+                        Shape first = vertices[i];
+                        Shape second = vertices[j];
+                        double k = (second.X - first.X) / (second.Y - first.Y);
+                        double b = first.Y - first.X * k;
+                        int above = 0;
+                        int below = 0;
+                        for (int l = 0; l < vertices.Count; l++)
+                        {
+                            if ((l != i) && (l != j))
+                            {
+                                Shape checking = vertices[l];
+                                double tempY = k * checking.X + b;
+                                if (tempY > checking.Y)
+                                {
+                                    below++;
+                                }
+                                if (tempY < checking.Y)
+                                {
+                                    above++;
+                                }
+                            }
+                        }
+                        if (above == 0 || below == 0)
+                        {
+                            Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+                            drawingContext.DrawLine(pen, new Point(first.X, first.Y), new Point(second.X, second.Y));
+                        }
+                        //Console.WriteLine($"k: {k.ToString()} b: {b.ToString()}");
+                    }
+                }
             }
         }
     }
