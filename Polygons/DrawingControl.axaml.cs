@@ -137,7 +137,7 @@ namespace Polygons
                     {
                         Shape first = vertices[i];
                         Shape second = vertices[j];
-                        double k = (second.X - first.X) / (second.Y - first.Y);
+                        double k = (second.Y - first.Y) / (second.X - first.X);         //TODO: Пошутить перед Завром шутеечку про IQ как у хлебушка
                         double b = first.Y - first.X * k;
                         int above = 0;
                         int below = 0;
@@ -162,7 +162,6 @@ namespace Polygons
                             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
                             drawingContext.DrawLine(pen, new Point(first.X, first.Y), new Point(second.X, second.Y));
                         }
-                        //Console.WriteLine($"k: {k.ToString()} b: {b.ToString()}");
                     }
                 }
             }
