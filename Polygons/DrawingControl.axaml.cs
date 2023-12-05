@@ -122,13 +122,8 @@ namespace Polygons
             InvalidateVisual();
         }
 
-        public override void Render(DrawingContext drawingContext)
+        public void DrawShape(DrawingContext drawingContext)
         {
-            foreach (Shape vertex in vertices)
-            {
-                vertex.Draw(drawingContext);
-            }
-            
             if (vertices.Count >= 3)
             {
                 for (int i = 0; i < vertices.Count - 1; i++)
@@ -165,6 +160,16 @@ namespace Polygons
                     }
                 }
             }
+        }
+
+        public override void Render(DrawingContext drawingContext)
+        {
+            foreach (Shape vertex in vertices)
+            {
+                vertex.Draw(drawingContext);
+            }
+            
+            DrawShape(drawingContext);
         }
     }
 }
