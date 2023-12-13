@@ -8,6 +8,7 @@ public abstract class Shape
     protected double y;
 
     public bool IsHeld;
+    public bool IsConnected;
 
     static Shape()
     {

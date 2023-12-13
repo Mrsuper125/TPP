@@ -119,11 +119,27 @@ namespace Polygons
                 }
             }
             
+            if (vertices.Count >= 3)
+            {
+                for (int i = 0; i < vertices.Count; i++)
+                {
+                    if (!vertices[i].IsConnected)
+                    {
+                        vertices.RemoveAt(i);
+                        i--;
+                    }
+                }
+            }
+            
             InvalidateVisual();
         }
 
-        public void DrawShape(DrawingContext drawingContext)
+        public void ZarvAlgorithm(DrawingContext drawingContext)
         {
+            foreach (Shape vertex in vertices)
+            {
+                vertex.IsConnected = false;
+            }
             if (vertices.Count >= 3)
             {
                 for (int i = 0; i < vertices.Count - 1; i++)
@@ -132,7 +148,7 @@ namespace Polygons
                     {
                         Shape first = vertices[i];
                         Shape second = vertices[j];
-                        double k = (second.Y - first.Y) / (second.X - first.X);         //TODO: Пошутить перед Завром шутеечку про IQ как у хлебушка
+                        double k = (second.Y - first.Y) / (second.X - first.X);
                         double b = first.Y - first.X * k;
                         int above = 0;
                         int below = 0;
@@ -156,6 +172,8 @@ namespace Polygons
                         {
                             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
                             drawingContext.DrawLine(pen, new Point(first.X, first.Y), new Point(second.X, second.Y));
+                            first.IsConnected = true;
+                            second.IsConnected = true;
                         }
                     }
                 }
@@ -169,7 +187,7 @@ namespace Polygons
                 vertex.Draw(drawingContext);
             }
             
-            DrawShape(drawingContext);
+            ZarvAlgorithm(drawingContext);
         }
     }
 }
