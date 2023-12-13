@@ -29,6 +29,6 @@ class SquareVertex : Shape
     {            
         Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
         Brush brush = new SolidColorBrush(Globals.FillColor);
-        drawingContext.DrawRectangle(brush, pen, new Rect(this.x, this.y, this.halfWidht, this.halfWidht));
+        drawingContext.DrawRectangle(brush, pen, new Rect(this.x - halfWidht, this.y - halfWidht, this.halfWidht * 2, this.halfWidht * 2));
     }
 }
