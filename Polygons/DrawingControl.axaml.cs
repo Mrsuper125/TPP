@@ -179,6 +179,11 @@ namespace Polygons
                 }
             }
         }
+        
+        public double Rotation(Shape first, Shape second, Shape third)
+        {
+            return (second.X - first.X) * (third.Y - second.Y) - (second.Y - first.Y) * (third.X - second.X);
+        }
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
         {
@@ -189,14 +194,46 @@ namespace Polygons
 
             if (vertices.Count >= 3)
             {
-                Shape corner = vertices[0];
-                for (int i = 1; i < vertices.Count; i++)
+                Shape left = vertices[0];
+                for (int i = 0; i < vertices.Count; i++)
                 {
-                    if ((vertices[i].X < corner.X) && (vertices[i].Y < corner.Y))
+                    if ((vertices[i].X < left.X))
                     {
-                        corner = vertices[i];
-                        
+                        left = vertices[i];
                     }
+                }
+
+                left.IsConnected = true;
+                
+                Shape previous = left;
+                
+                List<Shape> ShapeVertices = new List<Shape>();
+                
+                ShapeVertices.Add(previous);
+
+                do
+                {
+                    Shape current = vertices[0];
+
+                    for (int i = 1; i < vertices.Count; i++)
+                    {
+                        if (Rotation(previous, vertices[i], current) < 0)
+                        {
+                            current = vertices[i];
+                        }
+                    }
+                    
+                    previous = current;
+                    
+                    ShapeVertices.Add(previous);
+                } while (previous != left);
+
+                for (int i = 0; i < ShapeVertices.Count - 1; i++)
+                {
+                    Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+                    drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
+                    ShapeVertices[i].IsConnected = true;
+                    ShapeVertices[i+1].IsConnected = true;
                 }
             }
         }
@@ -208,7 +245,7 @@ namespace Polygons
                 vertex.Draw(drawingContext);
             }
             
-            ZarvAlgorithm(drawingContext);
+            JarvisAlgorithm(drawingContext);
         }
     }
 }
