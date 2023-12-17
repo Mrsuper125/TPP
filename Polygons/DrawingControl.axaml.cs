@@ -180,6 +180,27 @@ namespace Polygons
             }
         }
 
+        public void JarvisAlgorithm(DrawingContext drawingContext)
+        {
+            foreach (Shape vertex in vertices)
+            {
+                vertex.IsConnected = false;
+            }
+
+            if (vertices.Count >= 3)
+            {
+                Shape corner = vertices[0];
+                for (int i = 1; i < vertices.Count; i++)
+                {
+                    if ((vertices[i].X < corner.X) && (vertices[i].Y < corner.Y))
+                    {
+                        corner = vertices[i];
+                        
+                    }
+                }
+            }
+        }
+
         public override void Render(DrawingContext drawingContext)
         {
             foreach (Shape vertex in vertices)
