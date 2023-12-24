@@ -180,9 +180,24 @@ namespace Polygons
             }
         }
         
-        public double Rotation(Shape first, Shape second, Shape third)
+        public double VectorsCos(Shape first, Shape second, Shape third)
         {
-            return (second.X - first.X) * (third.Y - second.Y) - (second.Y - first.Y) * (third.X - second.X);
+            double firstVectorX = first.X - second.X;
+            double firstVectorY = first.Y - second.Y;
+            double secondVectorX = third.X - second.X;
+            double secondVectorY = third.Y - second.Y;
+            double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
+            double secondVectorLength = Math.Sqrt(secondVectorX * secondVectorX + secondVectorY * secondVectorY);
+            return (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
+                   (firstVectorLength * secondVectorLength);
+        }
+
+        public double Distance(Shape first, Shape second)
+        {
+            double firstVectorX = first.X - second.X;
+            double firstVectorY = first.Y - second.Y;
+            double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
+            return firstVectorLength;
         }
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
@@ -194,41 +209,67 @@ namespace Polygons
 
             if (vertices.Count >= 3)
             {
-                Shape left = vertices[0];
+                Shape lowest = vertices[0];
                 for (int i = 0; i < vertices.Count; i++)
                 {
-                    if ((vertices[i].X < left.X))
+                    if ((vertices[i].Y > lowest.Y))
                     {
-                        left = vertices[i];
+                        lowest = vertices[i];
+                    }
+                    else if((vertices[i].Y == lowest.Y) && (vertices[i].X < lowest.X))
+                    {
+                        lowest = vertices[i];
                     }
                 }
 
-                left.IsConnected = true;
+                lowest.IsConnected = true;
                 
-                Shape previous = left;
+                Shape current = lowest;
                 
                 List<Shape> ShapeVertices = new List<Shape>();
                 
-                ShapeVertices.Add(previous);
+                ShapeVertices.Add(current);
 
-                do
+                Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
+
+                Shape next = new CircleVertex(lowest.X - 5, lowest.Y);
+                
+                while (current != lowest)
                 {
-                    Shape current = vertices[0];
-
-                    for (int i = 1; i < vertices.Count; i++)
+                    double MinCos = 1;
+                    next = null;
+                    for (int i = 0; i < vertices.Count; i++)
                     {
-                        if (Rotation(previous, vertices[i], current) < 0)
+                        if (next != current && next != previous)
                         {
-                            current = vertices[i];
+                            if (VectorsCos(previous, current, vertices[i]) < MinCos)
+                            {
+                                next = vertices[i];
+                                MinCos = VectorsCos(previous, current, vertices[i]);
+                            }
+                            else if (VectorsCos(previous, current, vertices[i]) == MinCos && Distance(current, vertices[i]) < Distance(current, next))
+                            {
+                                next = vertices[i];
+                            }
                         }
                     }
                     
-                    previous = current;
+                    Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
+                    Brush brush = new SolidColorBrush(Globals.FillColor);
                     
-                    ShapeVertices.Add(previous);
-                } while (previous != left);
-
-                for (int i = 0; i < ShapeVertices.Count - 1; i++)
+                    // drawingContext.DrawLine(pen, new Point(previous.X, previous.Y), new Point(current.X, current.Y));
+                    // drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
+                    //
+                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
+                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
+                    
+                    previous = current;
+                    current = next;
+                    
+                    ShapeVertices.Add(current);
+                }
+                
+                for (int i = 0; i < ShapeVertices.Count; i++)
                 {
                     Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
                     drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
