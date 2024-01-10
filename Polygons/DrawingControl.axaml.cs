@@ -125,8 +125,8 @@ namespace Polygons
                 {
                     if (!vertices[i].IsConnected)
                     {
-                        vertices.RemoveAt(i);
-                        i--;
+                        //vertices.RemoveAt(i);
+                        //i--;
                     }
                 }
             }
@@ -183,13 +183,28 @@ namespace Polygons
         public double VectorsCos(Shape first, Shape second, Shape third)
         {
             double firstVectorX = first.X - second.X;
+            Console.Write("FirstX");
+            Console.WriteLine(firstVectorX);
             double firstVectorY = first.Y - second.Y;
+            Console.Write("FirstY");
+            Console.WriteLine(firstVectorX);
             double secondVectorX = third.X - second.X;
+            Console.Write("SecondX");
+            Console.WriteLine(firstVectorX);
             double secondVectorY = third.Y - second.Y;
+            Console.Write("SecondY");
+            Console.WriteLine(firstVectorX);
             double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
             double secondVectorLength = Math.Sqrt(secondVectorX * secondVectorX + secondVectorY * secondVectorY);
-            return (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
-                   (firstVectorLength * secondVectorLength);
+            Console.Write("Sum: ");
+            Console.WriteLine((firstVectorX * secondVectorX + firstVectorY * secondVectorY));
+            Console.Write("Divided: ");
+            Console.WriteLine((firstVectorLength * secondVectorLength));
+            double res = (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
+                         (firstVectorLength * secondVectorLength);
+            Console.Write("res: ");
+            Console.WriteLine(res);
+            return res;
         }
 
         public double Distance(Shape first, Shape second)
@@ -202,16 +217,23 @@ namespace Polygons
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
         {
+            Console.WriteLine("Джарвис начал джарвиситься");
+            
+            Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
+            Brush brush = new SolidColorBrush(Globals.FillColor);
             foreach (Shape vertex in vertices)
             {
                 vertex.IsConnected = false;
             }
+            
+            Console.WriteLine("Джарвис вырубил соединения");
 
             if (vertices.Count >= 3)
             {
                 Shape lowest = vertices[0];
-                for (int i = 0; i < vertices.Count; i++)
+                for (int i = 1; i < vertices.Count; i++)
                 {
+                    Console.WriteLine("Джарвис ищет точку");
                     if ((vertices[i].Y > lowest.Y))
                     {
                         lowest = vertices[i];
@@ -221,6 +243,11 @@ namespace Polygons
                         lowest = vertices[i];
                     }
                 }
+                
+                Console.WriteLine("Джарвис нашёл точку");
+                
+                drawingContext.DrawEllipse(brush, pen, new Point(lowest.X, lowest.Y), Globals.VertexRadius,
+                    Globals.VertexRadius);
 
                 lowest.IsConnected = true;
                 
@@ -231,53 +258,69 @@ namespace Polygons
                 ShapeVertices.Add(current);
 
                 Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
-
-                Shape next = new CircleVertex(lowest.X - 5, lowest.Y);
                 
-                while (current != lowest)
+                Shape next;
+                
+                Console.WriteLine("Джарвис готовится работать");
+
+                do
                 {
+                    Console.WriteLine("Джарвис запустил итерацию do while");
                     double MinCos = 1;
                     next = null;
                     for (int i = 0; i < vertices.Count; i++)
                     {
+                        Console.WriteLine("Джарвис запустил малую итерацию");
                         if (next != current && next != previous)
                         {
+                            Console.WriteLine("Точка проверяется");
                             if (VectorsCos(previous, current, vertices[i]) < MinCos)
                             {
+                                Console.WriteLine("Запустилось < сравнение");
                                 next = vertices[i];
                                 MinCos = VectorsCos(previous, current, vertices[i]);
+                                Console.WriteLine("Доделалось сравнение со знаком <");
                             }
-                            else if (VectorsCos(previous, current, vertices[i]) == MinCos && Distance(current, vertices[i]) < Distance(current, next))
+                            else if (VectorsCos(previous, current, vertices[i]) == MinCos &&
+                                     Distance(current, vertices[i]) < Distance(current, next))
                             {
+                                Console.WriteLine("Запустилось == сравнение");
                                 next = vertices[i];
                             }
+                            Console.WriteLine("Точка проверилась");
                         }
+                        pen = new Pen(Brushes.Yellow, 1, lineCap: PenLineCap.Square);
+                        brush = new SolidColorBrush(Globals.FillColor);
+                        
+                        Console.WriteLine("Джарвис завершил малую итерацию");
                     }
-                    
-                    Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
-                    Brush brush = new SolidColorBrush(Globals.FillColor);
-                    
+
                     // drawingContext.DrawLine(pen, new Point(previous.X, previous.Y), new Point(current.X, current.Y));
                     // drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
                     //
-                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
-                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
                     
+                    drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
+
                     previous = current;
                     current = next;
-                    
+
                     ShapeVertices.Add(current);
-                }
+                     Console.WriteLine("Джарвис докрутил большую итерацию");
+                } while (current != lowest);
+                Console.WriteLine("Цикл доциклился");
                 
-                for (int i = 0; i < ShapeVertices.Count; i++)
+                /*for (int i = 0; i < ShapeVertices.Count - 1; i++)
                 {
-                    Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+                    pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
                     drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
                     ShapeVertices[i].IsConnected = true;
                     ShapeVertices[i+1].IsConnected = true;
-                }
+                }*/
+                
             }
-        }
+            
+            Console.WriteLine("Джарвис доджарвисился");
+        }    
 
         public override void Render(DrawingContext drawingContext)
         {
@@ -287,6 +330,8 @@ namespace Polygons
             }
             
             JarvisAlgorithm(drawingContext);
+            
+            Console.WriteLine("Рендер дорендерился");
         }
     }
 }
