@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pen = Avalonia.Media.Pen;
 
 namespace Polygons
@@ -200,17 +201,15 @@ namespace Polygons
             double secondVectorY = second.Y - third.Y;
             double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
             double secondVectorLength = Math.Sqrt(secondVectorX * secondVectorX + secondVectorY * secondVectorY);
-            double res = (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
-                         (firstVectorLength * secondVectorLength);
-            return res;
+            return (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
+                   (firstVectorLength * secondVectorLength);
         }
 
         public double Distance(Shape first, Shape second)
         {
             double firstVectorX = first.X - second.X;
             double firstVectorY = first.Y - second.Y;
-            double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
-            return firstVectorLength;
+            return Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
         }
 
         double currentDistance;
@@ -218,13 +217,10 @@ namespace Polygons
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
         {
-            Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
-            Brush brush = new SolidColorBrush(Globals.FillColor);
             foreach (Shape vertex in vertices)
             {
                 vertex.IsConnected = false;
             }
-
 
             if (vertices.Count >= 3)
             {
@@ -240,23 +236,15 @@ namespace Polygons
                         lowest = vertices[i];
                     }
                 }
-
-                drawingContext.DrawEllipse(brush, pen, new Point(lowest.X, lowest.Y), Globals.VertexRadius,
-                    Globals.VertexRadius);
-
-                lowest.IsConnected = true;
-
+                
                 Shape current = lowest;
 
                 ShapeVertices.Clear(); //Some optimisation
-
                 ShapeVertices.Add(current);
-
+                
                 Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
-
                 Shape next;
-
-
+                
                 do
                 {
                     currentDistance = Double.MaxValue;
@@ -280,14 +268,7 @@ namespace Polygons
                             }
                         }
 
-
-                        pen = new Pen(Brushes.Yellow, 1, lineCap: PenLineCap.Square);
-                        brush = new SolidColorBrush(Globals.FillColor);
-
                     }
-
-
-                    drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
 
                     previous = current;
                     current = next;
@@ -295,6 +276,13 @@ namespace Polygons
                     ShapeVertices.Add(current);
 
                 } while (current != lowest);
+                
+                Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+                for (int i = 0; i < ShapeVertices.Count-1; i++)
+                {
+                    drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
+                    ShapeVertices[i].IsConnected = true;
+                }
             }
         }
 
