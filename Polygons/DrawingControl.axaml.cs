@@ -3,41 +3,46 @@ using Avalonia;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Pen = Avalonia.Media.Pen;
 
 namespace Polygons
 {
     public partial class DrawingControl : UserControl
-    {      //TODO: получше закомментить код
+    {
+        //TODO: получше закомментить код
 
         private List<Shape> vertices;
-        
-        private double _previousX;      //В эти переменные записываются предыдущие координаты курсора для вычисления дельты
+
+        private double _previousX; //В эти переменные записываются предыдущие координаты курсора для вычисления дельты
         private double _previousY;
 
         private bool _holding;
+
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
         {
             Console.WriteLine("Instantiated");
 
             vertices = new List<Shape>(); //Список для всех вершин
+            ShapeVertices = new List<Shape>();
         }
 
         public void LeftPointerPressed(double x, double y)
         {
-            foreach (Shape vertex in vertices)      //Проверяем все вершины на предмет клика внутри них
+            foreach (Shape vertex in vertices) //Проверяем все вершины на предмет клика внутри них
             {
                 if (vertex.IsInside(x, y))
                 {
                     Console.WriteLine("Inside");
                     _holding = true;
-                    _previousX = x;         //Если хотя бы одна вершина захвачена, начинаем фиксировать координаты
+                    _previousX = x; //Если хотя бы одна вершина захвачена, начинаем фиксировать координаты
                     _previousY = y;
                     vertex.IsHeld = true; //Записываем в поля вершины то, что мы её удерживаем
                 }
             }
 
-            if (!_holding)        //Если ни одну вершину не захватили, создаём новую
+            if (!_holding) //Если ни одну вершину не захватили, создаём новую
             {
                 switch
                     (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
@@ -74,35 +79,40 @@ namespace Polygons
 
         public void RigthPointerPressed(double x, double y)
         {
-            for (int i = vertices.Count - 1; i >= 0; i--)           //Перебор в обратном порядке, т.к. верхние фигуры рендерятся последними
+            for (int i = vertices.Count - 1;
+                 i >= 0;
+                 i--) //Перебор в обратном порядке, т.к. верхние фигуры рендерятся последними
             {
                 Shape vertex = vertices[i];
                 if (vertex.IsInside(x, y))
                 {
-                    vertices.RemoveAt(i);       //Попали - удаляем из списка, тогда рендер просто не нарисует её
+                    vertices.RemoveAt(i); //Попали - удаляем из списка, тогда рендер просто не нарисует её
                     Console.WriteLine("Deleted");
                     break;
                 }
             }
+
             InvalidateVisual();
         }
-        
-         public void PointerMoved(double x, double y)
+
+        public void PointerMoved(double x, double y)
         {
-            if (_holding)           //Если удерживаем хоть одну вершину, высчитываем движение
+            if (_holding) //Если удерживаем хоть одну вершину, высчитываем движение
             {
                 Console.WriteLine("Drag");
-                foreach (Shape vertex in vertices)      //Проходимся по списку вершин. Если она удерживается - двигаем
+                foreach (Shape vertex in vertices) //Проходимся по списку вершин. Если она удерживается - двигаем
                 {
                     if (vertex.IsHeld)
                     {
-                        vertex.X += x - _previousX;         //Высчитываем дельту через текущую и предыдущую позиции курсора
+                        vertex.X += x - _previousX; //Высчитываем дельту через текущую и предыдущую позиции курсора
                         vertex.Y += y - _previousY;
                     }
                 }
+
                 _previousX = x;
                 _previousY = y;
             }
+
             InvalidateVisual();
         }
 
@@ -115,22 +125,22 @@ namespace Polygons
                 _holding = false;
                 foreach (Shape vertex in vertices)
                 {
-                    vertex.IsHeld = false;      //Гарантированно отпускаем все вершины
+                    vertex.IsHeld = false; //Гарантированно отпускаем все вершины
                 }
             }
-            
+
             if (vertices.Count >= 3)
             {
                 for (int i = 0; i < vertices.Count; i++)
                 {
                     if (!vertices[i].IsConnected)
                     {
-                        vertices.RemoveAt(i);
-                        i--;
+                        //vertices.RemoveAt(i);
+                        //i--;
                     }
                 }
             }
-            
+
             InvalidateVisual();
         }
 
@@ -140,11 +150,12 @@ namespace Polygons
             {
                 vertex.IsConnected = false;
             }
+
             if (vertices.Count >= 3)
             {
                 for (int i = 0; i < vertices.Count - 1; i++)
                 {
-                    for (int j = i+1; j < vertices.Count; j++)
+                    for (int j = i + 1; j < vertices.Count; j++)
                     {
                         Shape first = vertices[i];
                         Shape second = vertices[j];
@@ -162,12 +173,14 @@ namespace Polygons
                                 {
                                     below++;
                                 }
+
                                 if (tempY < checking.Y)
                                 {
                                     above++;
                                 }
                             }
                         }
+
                         if (above == 0 || below == 0)
                         {
                             Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
@@ -179,13 +192,13 @@ namespace Polygons
                 }
             }
         }
-        
+
         public double VectorsCos(Shape first, Shape second, Shape third)
         {
-            double firstVectorX = first.X - second.X;
-            double firstVectorY = first.Y - second.Y;
-            double secondVectorX = third.X - second.X;
-            double secondVectorY = third.Y - second.Y;
+            double firstVectorX = second.X - first.X;
+            double firstVectorY = second.Y - first.Y;
+            double secondVectorX = second.X - third.X;
+            double secondVectorY = second.Y - third.Y;
             double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
             double secondVectorLength = Math.Sqrt(secondVectorX * secondVectorX + secondVectorY * secondVectorY);
             return (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
@@ -196,9 +209,11 @@ namespace Polygons
         {
             double firstVectorX = first.X - second.X;
             double firstVectorY = first.Y - second.Y;
-            double firstVectorLength = Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
-            return firstVectorLength;
+            return Math.Sqrt(firstVectorX * firstVectorX + firstVectorY * firstVectorY);
         }
+
+        double currentDistance;
+        private List<Shape> ShapeVertices;
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
         {
@@ -210,71 +225,63 @@ namespace Polygons
             if (vertices.Count >= 3)
             {
                 Shape lowest = vertices[0];
-                for (int i = 0; i < vertices.Count; i++)
+                for (int i = 1; i < vertices.Count; i++)
                 {
                     if ((vertices[i].Y > lowest.Y))
                     {
                         lowest = vertices[i];
                     }
-                    else if((vertices[i].Y == lowest.Y) && (vertices[i].X < lowest.X))
+                    else if ((vertices[i].Y == lowest.Y) && (vertices[i].X < lowest.X))
                     {
                         lowest = vertices[i];
                     }
                 }
-
-                lowest.IsConnected = true;
                 
                 Shape current = lowest;
-                
-                List<Shape> ShapeVertices = new List<Shape>();
-                
+
+                ShapeVertices.Clear(); //Some optimisation
                 ShapeVertices.Add(current);
-
-                Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
-
-                Shape next = new CircleVertex(lowest.X - 5, lowest.Y);
                 
-                while (current != lowest)
+                Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
+                Shape next;
+                
+                do
                 {
+                    currentDistance = Double.MaxValue;
                     double MinCos = 1;
                     next = null;
                     for (int i = 0; i < vertices.Count; i++)
                     {
-                        if (next != current && next != previous)
+                        if (VectorsCos(previous, current, vertices[i]) < MinCos)
                         {
-                            if (VectorsCos(previous, current, vertices[i]) < MinCos)
+                            next = vertices[i];
+                            MinCos = VectorsCos(previous, current, vertices[i]);
+                            currentDistance = Distance(current, vertices[i]);
+                        }
+                        else
+                        {
+                            if (VectorsCos(previous, current, vertices[i]) == MinCos &&
+                                Distance(current, vertices[i]) < currentDistance)
                             {
                                 next = vertices[i];
-                                MinCos = VectorsCos(previous, current, vertices[i]);
-                            }
-                            else if (VectorsCos(previous, current, vertices[i]) == MinCos && Distance(current, vertices[i]) < Distance(current, next))
-                            {
-                                next = vertices[i];
+                                currentDistance = Distance(current, vertices[i]);
                             }
                         }
+
                     }
-                    
-                    Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
-                    Brush brush = new SolidColorBrush(Globals.FillColor);
-                    
-                    // drawingContext.DrawLine(pen, new Point(previous.X, previous.Y), new Point(current.X, current.Y));
-                    // drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
-                    //
-                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
-                    // drawingContext.DrawEllipse(brush, pen, new Point(current.X, current.Y), Globals.VertexRadius, Globals.VertexRadius);
-                    
+
                     previous = current;
                     current = next;
-                    
+
                     ShapeVertices.Add(current);
-                }
+
+                } while (current != lowest);
                 
-                for (int i = 0; i < ShapeVertices.Count; i++)
+                Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
+                for (int i = 0; i < ShapeVertices.Count-1; i++)
                 {
-                    Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
                     drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
                     ShapeVertices[i].IsConnected = true;
-                    ShapeVertices[i+1].IsConnected = true;
                 }
             }
         }
@@ -285,7 +292,7 @@ namespace Polygons
             {
                 vertex.Draw(drawingContext);
             }
-            
+
             JarvisAlgorithm(drawingContext);
         }
     }
