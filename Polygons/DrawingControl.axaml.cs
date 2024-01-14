@@ -194,7 +194,6 @@ namespace Polygons
 
         public double VectorsCos(Shape first, Shape second, Shape third)
         {
-            Console.WriteLine("Cos is being calculated");
             double firstVectorX = second.X - first.X;
             double firstVectorY = second.Y - first.Y;
             double secondVectorX = second.X - third.X;
@@ -203,8 +202,6 @@ namespace Polygons
             double secondVectorLength = Math.Sqrt(secondVectorX * secondVectorX + secondVectorY * secondVectorY);
             double res = (firstVectorX * secondVectorX + firstVectorY * secondVectorY) /
                          (firstVectorLength * secondVectorLength);
-            Console.Write("res: ");
-            Console.WriteLine(res);
             return res;
         }
 
@@ -221,8 +218,6 @@ namespace Polygons
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
         {
-            Console.WriteLine("Джарвис начал джарвиситься");
-
             Pen pen = new Pen(Brushes.Crimson, 1, lineCap: PenLineCap.Square);
             Brush brush = new SolidColorBrush(Globals.FillColor);
             foreach (Shape vertex in vertices)
@@ -230,14 +225,12 @@ namespace Polygons
                 vertex.IsConnected = false;
             }
 
-            Console.WriteLine("Джарвис вырубил соединения");
 
             if (vertices.Count >= 3)
             {
                 Shape lowest = vertices[0];
                 for (int i = 1; i < vertices.Count; i++)
                 {
-                    Console.WriteLine("Джарвис ищет точку");
                     if ((vertices[i].Y > lowest.Y))
                     {
                         lowest = vertices[i];
@@ -247,8 +240,6 @@ namespace Polygons
                         lowest = vertices[i];
                     }
                 }
-
-                Console.WriteLine("Джарвис нашёл точку");
 
                 drawingContext.DrawEllipse(brush, pen, new Point(lowest.X, lowest.Y), Globals.VertexRadius,
                     Globals.VertexRadius);
@@ -265,53 +256,36 @@ namespace Polygons
 
                 Shape next;
 
-                Console.WriteLine("Джарвис готовится работать");
 
                 do
                 {
                     currentDistance = Double.MaxValue;
-                    Console.WriteLine("Джарвис запустил итерацию do while");
                     double MinCos = 1;
                     next = null;
                     for (int i = 0; i < vertices.Count; i++)
                     {
-                        Console.WriteLine("Джарвис запустил малую итерацию");
-                        //if (next != current && next != previous)
+                        if (VectorsCos(previous, current, vertices[i]) < MinCos)
                         {
-                            //Console.WriteLine("Точка проверяется");
-                            if (VectorsCos(previous, current, vertices[i]) < MinCos)
-                            {
-                                //Console.WriteLine("Запустилось < сравнение");
-                                next = vertices[i];
-                                MinCos = VectorsCos(previous, current, vertices[i]);
-                                currentDistance = Distance(current, vertices[i]);
-                                //Console.WriteLine("Доделалось сравнение со знаком <");
-                            }
-                            else
-                            {
-                                //Console.WriteLine("Запустилось == сравнение");
-                                if (VectorsCos(previous, current, vertices[i]) == MinCos &&
-                                    Distance(current, vertices[i]) < currentDistance)
-                                {
-                                    //Console.WriteLine("Точка равна");
-                                    next = vertices[i];
-                                    currentDistance = Distance(current, vertices[i]);
-                                }
-                                //Console.WriteLine("== сравнение выполнилось");
-                            }
-
-                            //Console.WriteLine("Точка проверилась");
+                            next = vertices[i];
+                            MinCos = VectorsCos(previous, current, vertices[i]);
+                            currentDistance = Distance(current, vertices[i]);
                         }
+                        else
+                        {
+                            if (VectorsCos(previous, current, vertices[i]) == MinCos &&
+                                Distance(current, vertices[i]) < currentDistance)
+                            {
+                                next = vertices[i];
+                                currentDistance = Distance(current, vertices[i]);
+                            }
+                        }
+
 
                         pen = new Pen(Brushes.Yellow, 1, lineCap: PenLineCap.Square);
                         brush = new SolidColorBrush(Globals.FillColor);
 
-                        //Console.WriteLine("Джарвис завершил малую итерацию");
                     }
 
-                    // drawingContext.DrawLine(pen, new Point(previous.X, previous.Y), new Point(current.X, current.Y));
-                    // drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
-                    //
 
                     drawingContext.DrawLine(pen, new Point(current.X, current.Y), new Point(next.X, next.Y));
 
@@ -320,27 +294,8 @@ namespace Polygons
 
                     ShapeVertices.Add(current);
 
-                    //Console.WriteLine("Джарвис докрутил большую итерацию");
                 } while (current != lowest);
-
-                //Console.WriteLine("Цикл доциклился");
-
-                /*for (int i = 0; i < ShapeVertices.Count - 1; i++)
-                {
-                    pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
-                    drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
-                    ShapeVertices[i].IsConnected = true;
-                    ShapeVertices[i+1].IsConnected = true;
-                }*/
-
-    
-                if (ShapeVertices.Count < 4)
-                {
-                    Console.WriteLine("Alarm");   
-                }
             }
-
-            Console.WriteLine("Джарвис доджарвисился");
         }
 
         public override void Render(DrawingContext drawingContext)
@@ -351,8 +306,6 @@ namespace Polygons
             }
 
             JarvisAlgorithm(drawingContext);
-
-            Console.WriteLine("Рендер дорендерился");
         }
     }
 }
