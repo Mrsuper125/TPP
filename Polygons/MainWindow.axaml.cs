@@ -21,20 +21,27 @@ public partial class MainWindow : Window
 
     private void Menu_TriangleSelect(object? sender, PointerPressedEventArgs e)
     {
-        IsClickOnUI = true;
         Globals.VertexShape = VertexShape.Triangle;
     }
     
     private void Menu_CircleSelect(object? sender, PointerPressedEventArgs e)
     {
-        IsClickOnUI = true;
         Globals.VertexShape = VertexShape.Circle;
     }
     
     private void Menu_SquareSelect(object? sender, PointerPressedEventArgs e)
     {
-        IsClickOnUI = true;
         Globals.VertexShape = VertexShape.Square;
+    }
+    
+    private void Menu_ZavrSelect(object? sender, PointerPressedEventArgs e)
+    {
+        Globals.Algorithm = Algorithms.Zavr;  
+    }
+    
+    private void Menu_JarvisSelect(object? sender, PointerPressedEventArgs e)
+    {
+        Globals.Algorithm = Algorithms.Jarvis;
     }
 
 private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)

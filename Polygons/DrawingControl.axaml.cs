@@ -135,8 +135,8 @@ namespace Polygons
                 {
                     if (!vertices[i].IsConnected)
                     {
-                        //vertices.RemoveAt(i);
-                        //i--;
+                        vertices.RemoveAt(i);
+                        i--;
                     }
                 }
             }

@@ -8,11 +8,17 @@ public enum VertexShape         //Enum с перечислением верши�
     Triangle                    //Но раз всё равно потом перепишу - пока так пойдёт.
 }                               //Но вот этот костыль будет тяжелее выпиливать. А что ещё делать?
 
+public enum Algorithms
+{
+    Zavr,
+    Jarvis
+}
+
 public static class Globals                 //Этот класс является временным костылём исключительно для облегчения разработки. Сюда я вынесу всякие настройки, по типу цвета, радиуса и т.д. Выпиливать его будет несложно, ведь можно просто пробежаться повсюду через Ctrl+F и позаменять. Выпиливаться он будет постепенно, по мере изучения делегатов и т.д.
 {
     public static readonly int VertexRadius = 25;
     public static readonly IImmutableSolidColorBrush BrushColor = Brushes.Green;
     public static readonly Color FillColor = Colors.Black;
     public static VertexShape VertexShape = VertexShape.Circle;
-
+    public static Algorithms Algorithm = Algorithms.Zavr;
 }
