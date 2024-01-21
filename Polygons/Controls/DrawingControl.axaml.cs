@@ -293,7 +293,16 @@ namespace Polygons
                 vertex.Draw(drawingContext);
             }
 
-            JarvisAlgorithm(drawingContext);
+            switch (Globals.Algorithm)
+            {
+                case Algorithms.Jarvis:
+                    JarvisAlgorithm(drawingContext);
+                    break;
+                case Algorithms.Zavr:
+                    ZarvAlgorithm(drawingContext);
+                    break;
+            }
+            
         }
     }
 }
