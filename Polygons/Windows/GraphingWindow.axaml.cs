@@ -12,6 +12,13 @@ public partial class GraphingWindow : Window
     {
         InitializeComponent();
         GraphingControl control = this.Find<GraphingControl>("GraphingControl");
-        control.Draw(new List<int>(){100, 50}, new List<int>(){100, 50});
+        control.Draw(new List<double[]>
+        {
+            new []{100d, 100d},
+            new []{75d, 75d},
+            new []{50d, 50d},
+            new []{25d, 25d},
+            new []{0d, 0d},
+        });
     }
 }

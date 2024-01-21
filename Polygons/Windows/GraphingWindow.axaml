@@ -4,8 +4,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:polygons="clr-namespace:Polygons"
         xmlns:controls="clr-namespace:Polygons"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" Height="1000" Width="1500"
         x:Class="Polygons.GraphingWindow"
-        Title="GraphingWindow">
+        Title="GraphingWindow"
+        CanResize="False">
         <polygons:GraphingControl Name="GraphingControl"></polygons:GraphingControl>
 </Window>
