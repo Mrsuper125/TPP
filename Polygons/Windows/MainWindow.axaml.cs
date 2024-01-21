@@ -12,6 +12,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        GraphingWindow graphingWindow = new GraphingWindow();
+        graphingWindow.Show();
     }
 
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
