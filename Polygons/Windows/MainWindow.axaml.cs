@@ -3,6 +3,7 @@ using System;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Polygons;
+using Polygons.Abstract_Algorithms;
 
 namespace Polygons;
 
@@ -105,5 +106,19 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         RadiusWindow radiusWindow = new RadiusWindow();
         radiusWindow.RadiusChanged += OnRadiusChanged;
         radiusWindow.Show();
+    }
+
+    private void Menu_OnJarvisMeasurePressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        GraphingWindow graphingWindow = new GraphingWindow(AbstractAlgorithms.Jarvis, 1000, 10000, 100);
+        graphingWindow.Show();
+    }
+    
+    private void Menu_OnZavrMeasurePressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        GraphingWindow graphingWindow = new GraphingWindow(AbstractAlgorithms.Zavr, 100, 300, 10);
+        graphingWindow.Show();
     }
 }

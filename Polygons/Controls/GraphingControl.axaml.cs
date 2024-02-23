@@ -27,7 +27,7 @@ public partial class GraphingControl : UserControl
         textBrush = new SolidColorBrush(Globals.TextColor);
     }
 
-    public void Draw(List<double[]> points)
+    public void Draw(List<double[]> points)         //Each 2D array = 1 point. Each point = 2 values: x and y
     {
         this.points = points;
         for (int i = 0; i < points.Count; i++)
@@ -37,12 +37,10 @@ public partial class GraphingControl : UserControl
         }
     }
 
-    public void DrawPoint(DrawingContext context, double x, double y)
+    public void DrawPoint(DrawingContext context, double x, double y)       //TODO: optimize for laptop
     {
         double displayedX = 100 + 1200 * (x / maxX);
         double displayedY = 900 - 700 * (y / maxY);
-        Console.WriteLine(x);
-        Console.WriteLine(x / maxX);
         context.DrawEllipse(brush, pen, new Point(displayedX, displayedY), 5d, 5d);
         
     }

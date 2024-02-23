@@ -23,6 +23,10 @@
                 <MenuItem Header="_Shape">
                     <MenuItem Header="Radius" PointerPressed="Menu_OnRadiusPressed"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="_Measurement">
+                    <MenuItem Header="Jarvis" PointerPressed="Menu_OnJarvisMeasurePressed"></MenuItem>
+                    <MenuItem Header="Zavr" PointerPressed="Menu_OnZavrMeasurePressed"></MenuItem>
+                </MenuItem>
                 <ComboBox SelectedIndex="0" PointerPressed="Menu_OnClick">
                     <ComboBoxItem PointerPressed="Menu_TriangleSelect">
                         <TextBlock Text="Triangle"></TextBlock>
