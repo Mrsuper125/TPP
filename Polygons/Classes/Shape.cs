@@ -3,7 +3,7 @@ using Polygons;
 
 public abstract class Shape
 {
-    protected static int VertexRadius;
+    public static double VertexRadius;
     protected double x;
     protected double y;
 

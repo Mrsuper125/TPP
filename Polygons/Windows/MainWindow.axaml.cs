@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using System;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Polygons;
 
 namespace Polygons;
 
@@ -12,8 +13,6 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        GraphingWindow graphingWindow = new GraphingWindow();
-        graphingWindow.Show();
     }
 
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
@@ -91,5 +90,20 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
     {
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
         cc.PointerReleased(e.GetPosition(cc).X, e.GetPosition(cc).Y);
+    }
+    
+    public void OnRadiusChanged(object? sender, RadiusEventArgs e)
+    {
+        Shape.VertexRadius = e.R;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.UpdateVisual();
+    }
+
+    private void Menu_OnRadiusPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        RadiusWindow radiusWindow = new RadiusWindow();
+        radiusWindow.RadiusChanged += OnRadiusChanged;
+        radiusWindow.Show();
     }
 }

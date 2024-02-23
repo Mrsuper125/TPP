@@ -20,6 +20,9 @@
                     <MenuItem Header="Save" PointerPressed="Menu_OnClick"></MenuItem>
                     <MenuItem Header="Exit" PointerPressed="Menu_OnClick"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="_Shape">
+                    <MenuItem Header="Radius" PointerPressed="Menu_OnRadiusPressed"></MenuItem>
+                </MenuItem>
                 <ComboBox SelectedIndex="0" PointerPressed="Menu_OnClick">
                     <ComboBoxItem PointerPressed="Menu_TriangleSelect">
                         <TextBlock Text="Triangle"></TextBlock>

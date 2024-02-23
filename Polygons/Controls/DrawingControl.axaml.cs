@@ -95,6 +95,11 @@ namespace Polygons
             InvalidateVisual();
         }
 
+        public void UpdateVisual()
+        {
+            InvalidateVisual();
+        }
+        
         public void PointerMoved(double x, double y)
         {
             if (_holding) //Если удерживаем хоть одну вершину, высчитываем движение
@@ -286,6 +291,8 @@ namespace Polygons
             }
         }
 
+        
+        
         public override void Render(DrawingContext drawingContext)
         {
             foreach (Shape vertex in vertices)
