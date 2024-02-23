@@ -22,15 +22,17 @@ public delegate void RadiusEventHandler(object? sender, RadiusEventArgs e);
 public partial class RadiusWindow : Window
 {
     public event RadiusEventHandler RadiusChanged;
+    private bool initialized;
     
     public RadiusWindow()
     {
         InitializeComponent();
+        initialized = true;
     }
 
 
     private void RadiusSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {
-        RadiusChanged(this, new RadiusEventArgs(e.NewValue));
+        if (initialized) RadiusChanged(this, new RadiusEventArgs(e.NewValue));
     }
 }

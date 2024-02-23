@@ -20,6 +20,6 @@ public static class Globals                 //Этот класс являетс
     public static readonly IImmutableSolidColorBrush BrushColor = Brushes.Green;
     public static readonly Color FillColor = Colors.Black;
     public static readonly Color TextColor = Colors.Green;
-    public static VertexShape VertexShape = VertexShape.Circle;
+    public static VertexShape VertexShape = VertexShape.Triangle;
     public static Algorithms Algorithm = Algorithms.Zavr;
 }

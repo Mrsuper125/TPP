@@ -35,7 +35,7 @@
                         <TextBlock Text="Square"></TextBlock>
                     </ComboBoxItem>
                     <ComboBoxItem PointerPressed="Menu_CircleSelect">
-                        <TextBlock Text="Square"></TextBlock>
+                        <TextBlock Text="Circle"></TextBlock>
                     </ComboBoxItem>
                 </ComboBox>
                 <ComboBox SelectedIndex="0" PointerPressed="Menu_OnClick">

@@ -43,6 +43,7 @@ class TriangleVertex: Shape
 
     public override bool IsInside(double x, double y)
     {
+        InvalidateVertices();
         if (!((y - _leftVertexY)/(_topVertexY - _leftVertexY) < (x - _leftVertexX)/(_topVertexX - _leftVertexX)))  //длинное страншное неравенство, проверяющее нахождение точки под прямой. Инвертируется для того, чтобы отловить неподходящие точки
         {
             return false;

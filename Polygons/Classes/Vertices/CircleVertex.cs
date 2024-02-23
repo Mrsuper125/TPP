@@ -27,6 +27,6 @@ class CircleVertex : Shape
     {
         Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
         Brush brush = new SolidColorBrush(Globals.FillColor);
-        drawingContext.DrawEllipse(brush, pen, new Point(this.x, this.y), Globals.VertexRadius, Globals.VertexRadius);
+        drawingContext.DrawEllipse(brush, pen, new Point(this.x, this.y), VertexRadius, VertexRadius);
     }
 }
