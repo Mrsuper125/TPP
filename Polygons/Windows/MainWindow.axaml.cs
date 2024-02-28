@@ -10,10 +10,25 @@ namespace Polygons;
 public partial class MainWindow : Window
 {
     public bool IsClickOnUI;    //Костыльная переменная, в которую пишется true, если клик пришёл по чему угодно, кроме рисовалки. TODO: спросить Завра про идеи получше
+    private RadiusWindow radiusWindow;
+    private bool radiusWindowAlive;
     
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    private void InitializeRadiusWindow()
+    {
+        radiusWindow = new RadiusWindow();
+        radiusWindow.RadiusChanged += OnRadiusChanged;
+        radiusWindowAlive = true;
+        radiusWindow.Closed += RadiusWindowClosed;
+    }
+
+    private void RadiusWindowClosed(object? sender, EventArgs args)
+    {
+        radiusWindowAlive = false;
     }
 
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
@@ -103,9 +118,15 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
     private void Menu_OnRadiusPressed(object? sender, PointerPressedEventArgs e)
     {
         IsClickOnUI = true;
-        RadiusWindow radiusWindow = new RadiusWindow();
-        radiusWindow.RadiusChanged += OnRadiusChanged;
-        radiusWindow.Show();
+        if (radiusWindowAlive)
+        {
+            radiusWindow.Activate();
+        }
+        else
+        {
+            InitializeRadiusWindow();
+            radiusWindow.Show();
+        }
     }
 
     private void Menu_OnJarvisMeasurePressed(object? sender, PointerPressedEventArgs e)
