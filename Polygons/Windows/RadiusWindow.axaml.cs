@@ -23,13 +23,24 @@ public partial class RadiusWindow : Window
 {
     public event RadiusEventHandler RadiusChanged;
     private bool initialized;
-    
-    public RadiusWindow()
+    private Slider radiusSlider;
+
+    public RadiusWindow(double initialRadius)
     {
         InitializeComponent();
-        initialized = true;
+        radiusSlider = this.Find<Slider>("RadiusSlider");
+        radiusSlider.Value = initialRadius;
     }
 
+    public void RegisterInitialization()
+    {
+        initialized = true;
+    }
+    
+    public void RegisterClose()
+    {
+        initialized = false;
+    }
 
     private void RadiusSlider_OnValueChanged(object? sender, RangeBaseValueChangedEventArgs e)
     {

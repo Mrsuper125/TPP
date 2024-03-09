@@ -20,15 +20,17 @@ public partial class MainWindow : Window
 
     private void InitializeRadiusWindow()
     {
-        radiusWindow = new RadiusWindow();
+        radiusWindow = new RadiusWindow(Shape.VertexRadius);
         radiusWindow.RadiusChanged += OnRadiusChanged;
         radiusWindowAlive = true;
         radiusWindow.Closed += RadiusWindowClosed;
+        radiusWindow.RegisterInitialization();
     }
 
     private void RadiusWindowClosed(object? sender, EventArgs args)
     {
         radiusWindowAlive = false;
+        radiusWindow.RegisterClose();
     }
 
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
