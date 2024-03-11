@@ -17,7 +17,7 @@ public enum Algorithms
 public static class Globals                 //Этот класс является временным костылём исключительно для облегчения разработки. Сюда я вынесу всякие настройки, по типу цвета, радиуса и т.д. Выпиливать его будет несложно, ведь можно просто пробежаться повсюду через Ctrl+F и позаменять. Выпиливаться он будет постепенно, по мере изучения делегатов и т.д.
 {
     public static double VertexRadius = 25;
-    public static readonly IImmutableSolidColorBrush BrushColor = Brushes.Green;
+    public static IImmutableSolidColorBrush BrushColor = Brushes.Green;
     public static readonly Color FillColor = Colors.Black;
     public static readonly Color TextColor = Colors.Green;
     public static VertexShape VertexShape = VertexShape.Triangle;

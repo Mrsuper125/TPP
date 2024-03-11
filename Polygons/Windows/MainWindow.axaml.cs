@@ -2,8 +2,11 @@ using Avalonia.Controls;
 using System;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Polygons;
 using Polygons.Abstract_Algorithms;
+using Polygons.Windows;
 
 namespace Polygons;
 
@@ -12,6 +15,8 @@ public partial class MainWindow : Window
     public bool IsClickOnUI;    //Костыльная переменная, в которую пишется true, если клик пришёл по чему угодно, кроме рисовалки. TODO: спросить Завра про идеи получше
     private RadiusWindow radiusWindow;
     private bool radiusWindowAlive;
+    private ColorSelectWindow colorSelectWindow;
+    private bool colorSelectWindowAlive;
     
     public MainWindow()
     {
@@ -27,10 +32,25 @@ public partial class MainWindow : Window
         radiusWindow.RegisterInitialization();
     }
 
+    private void InitializeColorWindow()
+    {
+        colorSelectWindow = new ColorSelectWindow(Globals.BrushColor.Color);
+        colorSelectWindow.colorChanged += OnColorChanged;
+        colorSelectWindowAlive = true;
+        colorSelectWindow.Closed += ColorWindowClosed;
+        colorSelectWindow.RegisterInitialization();
+    }
+
     private void RadiusWindowClosed(object? sender, EventArgs args)
     {
         radiusWindowAlive = false;
         radiusWindow.RegisterClose();
+    }
+
+    private void ColorWindowClosed(object? sender, EventArgs args)
+    {
+        colorSelectWindowAlive = false;
+        colorSelectWindow.RegisterClose();
     }
 
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
@@ -117,6 +137,14 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         cc.UpdateVisual();
     }
 
+    public void OnColorChanged(object? sender, ColorSelectedEventArgs e)
+    {
+        Globals.BrushColor = new ImmutableSolidColorBrush(new Color(255, e.Red, e.Green, e.Blue));
+        Console.WriteLine(e.Red);
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.UpdateVisual();
+    }
+
     private void Menu_OnRadiusPressed(object? sender, PointerPressedEventArgs e)
     {
         IsClickOnUI = true;
@@ -128,6 +156,20 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         {
             InitializeRadiusWindow();
             radiusWindow.Show();
+        }
+    }
+
+    private void Menu_OnColorPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        if (colorSelectWindowAlive)
+        {
+            colorSelectWindow.Activate();
+        }
+        else
+        {
+            InitializeColorWindow();
+            colorSelectWindow.Show();
         }
     }
 

@@ -22,6 +22,7 @@
                 </MenuItem>
                 <MenuItem Header="_Shape">
                     <MenuItem Header="Radius" PointerPressed="Menu_OnRadiusPressed"></MenuItem>
+                    <MenuItem Header="Fill color" PointerPressed="Menu_OnColorPressed"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Measurement">
                     <MenuItem Header="Jarvis" PointerPressed="Menu_OnJarvisMeasurePressed"></MenuItem>
