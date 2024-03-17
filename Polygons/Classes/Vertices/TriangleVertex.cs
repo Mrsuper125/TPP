@@ -4,13 +4,20 @@ using Avalonia.Media;
 
 namespace Polygons;
 
+[Serializable]
 class TriangleVertex: Shape
 {
+    [NonSerialized]
     private double _topVertexX;
+    [NonSerialized]
     private double _topVertexY;
+    [NonSerialized]
     private double _leftVertexX;
+    [NonSerialized]
     private double _leftVertexY;
+    [NonSerialized]
     private double _rightVertexX;
+    [NonSerialized]
     private double _rightVertexY;
 
     public double TopVertexX => _topVertexX;

@@ -1,13 +1,17 @@
-﻿using Avalonia.Media;
+﻿using System;
+using Avalonia.Media;
 using Polygons;
 
+[Serializable]
 public abstract class Shape
 {
     public static double VertexRadius;
     protected double x;
     protected double y;
-
+    
+    [NonSerialized]
     public bool IsHeld;
+    [NonSerialized]
     public bool IsConnected;
 
     static Shape()

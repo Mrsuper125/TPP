@@ -4,6 +4,7 @@ using Avalonia.Media;
 
 namespace Polygons;
 
+[Serializable]
 class CircleVertex : Shape
 {
     public CircleVertex(double x, double y) : base(x, y)

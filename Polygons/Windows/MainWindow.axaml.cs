@@ -186,4 +186,11 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         GraphingWindow graphingWindow = new GraphingWindow(AbstractAlgorithms.Zavr, 100, 300, 10);
         graphingWindow.Show();
     }
+
+    private void Menu_OnSavePressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.SaveState();
+    }
 }

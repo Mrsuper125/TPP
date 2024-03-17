@@ -3,8 +3,10 @@ using Avalonia;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Pen = Avalonia.Media.Pen;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Polygons
 {
@@ -26,8 +28,30 @@ namespace Polygons
 
             vertices = new List<Shape>(); //Список для всех вершин
             ShapeVertices = new List<Shape>();
+            LoadState();
         }
 
+        [Obsolete("Obsolete")]
+        public void SaveState()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(
+                "state.bin",
+                FileMode.Create,
+                FileAccess.Write);
+            bf.Serialize(fs,vertices);
+            fs.Close();
+        }
+
+        [Obsolete("Obsolete")]
+        public void LoadState()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream("state.bin",FileMode.Open, FileAccess.Read);
+            vertices = (List<Shape>)(bf.Deserialize(fs));
+            fs.Close();
+        }
+        
         public void LeftPointerPressed(double x, double y)
         {
             foreach (Shape vertex in vertices) //Проверяем все вершины на предмет клика внутри них

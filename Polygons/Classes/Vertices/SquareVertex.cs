@@ -4,8 +4,10 @@ using Avalonia.Media;
 
 namespace Polygons;
 
+[Serializable]
 class SquareVertex : Shape
 {
+    [NonSerialized]
     public double halfWidht;
 
     public SquareVertex(double x, double y) : base(x, y)

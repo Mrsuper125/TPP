@@ -17,7 +17,7 @@
                     <MenuItem Header="New" PointerPressed="Menu_OnClick"></MenuItem>
                     <MenuItem Header="Open" PointerPressed="Menu_OnClick"></MenuItem>
                     <MenuItem Header="Save as" PointerPressed="Menu_OnClick"></MenuItem>
-                    <MenuItem Header="Save" PointerPressed="Menu_OnClick"></MenuItem>
+                    <MenuItem Header="Save" PointerPressed="Menu_OnSavePressed"></MenuItem>
                     <MenuItem Header="Exit" PointerPressed="Menu_OnClick"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Shape">
