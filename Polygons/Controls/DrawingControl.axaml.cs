@@ -28,7 +28,7 @@ namespace Polygons
 
             vertices = new List<Shape>(); //Список для всех вершин
             ShapeVertices = new List<Shape>();
-            LoadState();
+            //LoadState();
         }
 
         [Obsolete("Obsolete")]
@@ -39,7 +39,7 @@ namespace Polygons
                 "state.bin",
                 FileMode.Create,
                 FileAccess.Write);
-            bf.Serialize(fs,vertices);
+            bf.Serialize(fs, vertices);
             fs.Close();
         }
 
@@ -47,11 +47,17 @@ namespace Polygons
         public void LoadState()
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream("state.bin",FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream("state.bin", FileMode.Open, FileAccess.Read);
             vertices = (List<Shape>)(bf.Deserialize(fs));
             fs.Close();
         }
-        
+
+        public List<Shape> Vertices //Property limiting outside access to vertices to readonly
+        {
+            get { return vertices; }
+            set { vertices = value; }
+        }
+
         public void LeftPointerPressed(double x, double y)
         {
             foreach (Shape vertex in vertices) //Проверяем все вершины на предмет клика внутри них
@@ -123,7 +129,7 @@ namespace Polygons
         {
             InvalidateVisual();
         }
-        
+
         public void PointerMoved(double x, double y)
         {
             if (_holding) //Если удерживаем хоть одну вершину, высчитываем движение
@@ -265,15 +271,15 @@ namespace Polygons
                         lowest = vertices[i];
                     }
                 }
-                
+
                 Shape current = lowest;
 
                 ShapeVertices.Clear(); //Some optimisation
                 ShapeVertices.Add(current);
-                
+
                 Shape previous = new CircleVertex(lowest.X - 100, lowest.Y);
                 Shape next;
-                
+
                 do
                 {
                     currentDistance = Double.MaxValue;
@@ -296,27 +302,25 @@ namespace Polygons
                                 currentDistance = Distance(current, vertices[i]);
                             }
                         }
-
                     }
 
                     previous = current;
                     current = next;
 
                     ShapeVertices.Add(current);
-
                 } while (current != lowest);
-                
+
                 Pen pen = new Pen(Globals.BrushColor, 1, lineCap: PenLineCap.Square);
-                for (int i = 0; i < ShapeVertices.Count-1; i++)
+                for (int i = 0; i < ShapeVertices.Count - 1; i++)
                 {
-                    drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y), new Point(ShapeVertices[i+1].X, ShapeVertices[i+1].Y));
+                    drawingContext.DrawLine(pen, new Point(ShapeVertices[i].X, ShapeVertices[i].Y),
+                        new Point(ShapeVertices[i + 1].X, ShapeVertices[i + 1].Y));
                     ShapeVertices[i].IsConnected = true;
                 }
             }
         }
 
-        
-        
+
         public override void Render(DrawingContext drawingContext)
         {
             foreach (Shape vertex in vertices)
@@ -333,7 +337,6 @@ namespace Polygons
                     ZarvAlgorithm(drawingContext);
                     break;
             }
-            
         }
     }
 }

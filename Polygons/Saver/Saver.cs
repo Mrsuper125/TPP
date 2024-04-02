@@ -7,13 +7,13 @@ namespace Polygons;
 
 public class Saver
 {
-    private string? fileName;
-    private Window parentWindow;
+    private string? _fileName;
+    private readonly Window _parentWindow;
 
     public Saver(Window window)
     {
-        fileName = "save";
-        parentWindow = window;
+        _fileName = null;
+        _parentWindow = window;
     }
     
     [Obsolete]
@@ -22,26 +22,41 @@ public class Saver
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream fs = new FileStream(
-            fileName + ".bin",
+            _fileName + ".bin",
             FileMode.Create,
             FileAccess.Write);
         bf.Serialize(fs, saveTarget);
         fs.Close();
     }
 
-    public void PickName() //This function utilizes the file picker dialogue and returns the filename
+    public async void PickName() //This function utilizes the file picker dialogue and returns the filename. It is async to make it non-blocking. The file still won't be saved until a name is picked
     {
+        Console.WriteLine("Picking name");
         var saveFileDialog = new SaveFileDialog();
         saveFileDialog.Title = "Save file to some location";
-        saveFileDialog.InitialFileName = fileName + ".bin";
+        saveFileDialog.InitialFileName = _fileName + ".bin";
         saveFileDialog.DefaultExtension = "bin";
         saveFileDialog.Filters.Add(new FileDialogFilter { Name = "Standart Binary files", Extensions = { "bin" } });
 
-        string? result = saveFileDialog.ShowAsync(parentWindow).Result;
+        string? result = await saveFileDialog.ShowAsync(_parentWindow);         //Описание проблемы: требуется объяснить async/await. .Result тут не работает, если же переделывать весь метод в ассинхронный, мы не знаем конца
+        Console.WriteLine("Here");
+        
         if (result != null)
         {
-            fileName = result;
+            _fileName = result;
             Console.WriteLine(result);
+        }
+    }
+
+    public void SaveWithoutQuestion(object saveTarget)
+    {
+        if (_fileName != null)
+        {
+            Save(saveTarget);
+        }
+        else
+        {
+            PickName().;
         }
     }
 }
