@@ -17,12 +17,10 @@ public partial class MainWindow : Window
     private bool radiusWindowAlive;
     private ColorSelectWindow colorSelectWindow;
     private bool colorSelectWindowAlive;
-    private Saver _saver;
     
     public MainWindow()
     {
         InitializeComponent();
-        _saver = new Saver(this);
     }
 
     private void InitializeRadiusWindow()
@@ -193,7 +191,5 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
     {
         IsClickOnUI = true;
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
-        cc.SaveState();
-        _saver.PickName();
     }
 }

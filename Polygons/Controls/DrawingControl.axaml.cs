@@ -20,6 +20,9 @@ namespace Polygons
         private double _previousY;
 
         private bool _holding;
+        
+        private Saver _saver;
+
 
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
@@ -28,28 +31,35 @@ namespace Polygons
 
             vertices = new List<Shape>(); //Список для всех вершин
             ShapeVertices = new List<Shape>();
-            LoadState();
+            
+            _saver = new Saver(Application.Current.);
+        }
+
+        public void New()
+        {
+            
+        }
+        
+        public void Open()
+        {
+            
         }
 
         [Obsolete("Obsolete")]
         public void SaveState()
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream(
-                "state.bin",
-                FileMode.Create,
-                FileAccess.Write);
-            bf.Serialize(fs,vertices);
-            fs.Close();
+            
         }
 
         [Obsolete("Obsolete")]
-        public void LoadState()
+        public void SaveAs()
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream("state.bin",FileMode.Open, FileAccess.Read);
-            vertices = (List<Shape>)(bf.Deserialize(fs));
-            fs.Close();
+            
+        }
+
+        public void Exit()
+        {
+            
         }
         
         public void LeftPointerPressed(double x, double y)
