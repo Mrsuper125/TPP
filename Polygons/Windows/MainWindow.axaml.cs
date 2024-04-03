@@ -194,6 +194,6 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         IsClickOnUI = true;
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
         cc.SaveState();
-        _saver.PickName();
+        _saver.SaveWithoutQuestion(cc.Vertices);
     }
 }

@@ -32,5 +32,8 @@
         <DependentUpon>DrawingControl.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Windows\ColorSelectWindow.axaml.cs">
+        <DependentUpon>ColorSelectWindow.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
