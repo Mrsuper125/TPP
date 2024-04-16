@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using System;
+using System.Collections.Generic;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -12,17 +13,23 @@ namespace Polygons;
 
 public partial class MainWindow : Window
 {
-    public bool IsClickOnUI;    //Костыльная переменная, в которую пишется true, если клик пришёл по чему угодно, кроме рисовалки. TODO: спросить Завра про идеи получше
+    public bool
+        IsClickOnUI; //Костыльная переменная, в которую пишется true, если клик пришёл по чему угодно, кроме рисовалки. TODO: спросить Завра про идеи получше
+
     private RadiusWindow radiusWindow;
     private bool radiusWindowAlive;
     private ColorSelectWindow colorSelectWindow;
     private bool colorSelectWindowAlive;
     private Saver _saver;
-    
+
     public MainWindow()
     {
         InitializeComponent();
         _saver = new Saver(this);
+        _saver.RequestDataErasure += EraseData;
+        _saver.RequestDataFilling += FillData;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.CallCommitChange += CommitAction;
     }
 
     private void InitializeRadiusWindow()
@@ -55,6 +62,25 @@ public partial class MainWindow : Window
         colorSelectWindow.RegisterClose();
     }
 
+    private void EraseData()
+    {
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.Vertices.Clear();
+        cc.UpdateVisual();
+    }
+
+    private void CommitAction()
+    {
+        _saver.ActionCommitted();
+    }
+
+    private void FillData(List<Shape> vertices)
+    {
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        cc.Vertices = vertices;
+        cc.UpdateVisual();
+    }
+
     private void Menu_OnClick(object? sender, PointerPressedEventArgs e)
     {
         IsClickOnUI = true; //Пока что общий плейсхолдерный перехватчик UI-шных кликов
@@ -64,37 +90,37 @@ public partial class MainWindow : Window
     {
         Globals.VertexShape = VertexShape.Triangle;
     }
-    
+
     private void Menu_CircleSelect(object? sender, PointerPressedEventArgs e)
     {
         Globals.VertexShape = VertexShape.Circle;
     }
-    
+
     private void Menu_SquareSelect(object? sender, PointerPressedEventArgs e)
     {
         Globals.VertexShape = VertexShape.Square;
     }
-    
+
     private void Menu_ZavrSelect(object? sender, PointerPressedEventArgs e)
     {
-        Globals.Algorithm = Algorithms.Zavr;  
+        Globals.Algorithm = Algorithms.Zavr;
     }
-    
+
     private void Menu_JarvisSelect(object? sender, PointerPressedEventArgs e)
     {
         Globals.Algorithm = Algorithms.Jarvis;
     }
 
-private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
+    private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEventArgs e)
     {
-        Console.WriteLine("CLICK"); 
+        Console.WriteLine("CLICK");
         // отладочная печать – просто проверить, что метод вызвался при клике
 
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
         // нам нужен объект (переменная), ссылающийся на наш контрол.
         // для этого воспользуемся методом Find и найдем его по имени myCC
 
-        if (!IsClickOnUI)       //Перехватываем UI-шные клики и вызываем методы клика только когда клик не по UI
+        if (!IsClickOnUI) //Перехватываем UI-шные клики и вызываем методы клика только когда клик не по UI
         {
             if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
             {
@@ -106,7 +132,6 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
 
                 // А затем просто вызываем созданный выше метод PointerPressed, 
                 // относящийся уже не к окну, а к контролу – там мы сможем рисовать
-
             }
 
             if (e.GetCurrentPoint(null).Properties.IsRightButtonPressed)
@@ -116,22 +141,27 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         }
         else
         {
-            IsClickOnUI = false;        //Если клик пришёл по UI, поняли, нифига не делаем, только следующий чур будет какой надо
+            IsClickOnUI =
+                false; //Если клик пришёл по UI, поняли, нифига не делаем, только следующий чур будет какой надо
         }
     }
 
-    private void Win_PointerMoved(object? sender, PointerEventArgs e)       //Как и предыдущий, ловит событие (здесь - перемещение курсора) и прокидывает координаты в DrawingControl
+    private void
+        Win_PointerMoved(object? sender,
+            PointerEventArgs e) //Как и предыдущий, ловит событие (здесь - перемещение курсора) и прокидывает координаты в DrawingControl
     {
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
-        cc.PointerMoved(e.GetPosition(cc).X, e.GetPosition(cc).Y);          //Здесь и в Released костыль с IsClickOnUI не засунут для экономии места в коде - если уже перехватили клики, эти 2 метода ничего не сделают
+        cc.PointerMoved(e.GetPosition(cc).X,
+            e.GetPosition(cc)
+                .Y); //Здесь и в Released костыль с IsClickOnUI не засунут для экономии места в коде - если уже перехватили клики, эти 2 метода ничего не сделают
     }
-    
-    private void Win_PointerReleased(object? sender, PointerReleasedEventArgs e)    //Та же аналогия
+
+    private void Win_PointerReleased(object? sender, PointerReleasedEventArgs e) //Та же аналогия
     {
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
         cc.PointerReleased(e.GetPosition(cc).X, e.GetPosition(cc).Y);
     }
-    
+
     public void OnRadiusChanged(object? sender, RadiusEventArgs e)
     {
         Shape.VertexRadius = e.R;
@@ -181,7 +211,7 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         GraphingWindow graphingWindow = new GraphingWindow(AbstractAlgorithms.Jarvis, 1000, 10000, 100);
         graphingWindow.Show();
     }
-    
+
     private void Menu_OnZavrMeasurePressed(object? sender, PointerPressedEventArgs e)
     {
         IsClickOnUI = true;
@@ -189,11 +219,38 @@ private void Win_PointerPressed(object sender, Avalonia.Input.PointerPressedEven
         graphingWindow.Show();
     }
 
+    private void Menu_OnNewPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        _saver.New(cc.Vertices);
+    }
+
+    private void Menu_OnOpenPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        _saver.Open(cc.Vertices);
+    }
+    
     private void Menu_OnSavePressed(object? sender, PointerPressedEventArgs e)
     {
         IsClickOnUI = true;
         DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
-        cc.SaveState();
         _saver.SaveWithoutQuestion(cc.Vertices);
+    }
+
+    private void Menu_OnSaveAsPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        _saver.SaveWithQuestion(cc.Vertices);
+    }
+    
+    private void Menu_OnExitPressed(object? sender, PointerPressedEventArgs e)
+    {
+        IsClickOnUI = true;
+        DrawingControl cc = this.Find<DrawingControl>("MyDrawingControl");
+        _saver.Exit(cc.Vertices);
     }
 }

@@ -8,8 +8,12 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
+
+
 namespace Polygons
 {
+    public delegate void CommitChange();
+    
     public partial class DrawingControl : UserControl
     {
         //TODO: получше закомментить код
@@ -21,6 +25,8 @@ namespace Polygons
 
         private bool _holding;
 
+        public event CommitChange CallCommitChange;
+
         // координаты нашей пока единственной вершины.
         public DrawingControl() : base()
         {
@@ -29,27 +35,6 @@ namespace Polygons
             vertices = new List<Shape>(); //Список для всех вершин
             ShapeVertices = new List<Shape>();
             //LoadState();
-        }
-
-        [Obsolete("Obsolete")]
-        public void SaveState()
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream(
-                "state.bin",
-                FileMode.Create,
-                FileAccess.Write);
-            bf.Serialize(fs, vertices);
-            fs.Close();
-        }
-
-        [Obsolete("Obsolete")]
-        public void LoadState()
-        {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream("state.bin", FileMode.Open, FileAccess.Read);
-            vertices = (List<Shape>)(bf.Deserialize(fs));
-            fs.Close();
         }
 
         public List<Shape> Vertices //Property limiting outside access to vertices to readonly
@@ -74,6 +59,7 @@ namespace Polygons
 
             if (!_holding) //Если ни одну вершину не захватили, создаём новую
             {
+                this.CallCommitChange();
                 switch
                     (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
                 {
@@ -117,6 +103,7 @@ namespace Polygons
                 if (vertex.IsInside(x, y))
                 {
                     vertices.RemoveAt(i); //Попали - удаляем из списка, тогда рендер просто не нарисует её
+                    this.CallCommitChange();
                     Console.WriteLine("Deleted");
                     break;
                 }
@@ -162,6 +149,8 @@ namespace Polygons
                 {
                     vertex.IsHeld = false; //Гарантированно отпускаем все вершины
                 }
+
+                this.CallCommitChange();
             }
 
             if (vertices.Count >= 3)
@@ -172,6 +161,7 @@ namespace Polygons
                     {
                         vertices.RemoveAt(i);
                         i--;
+                        this.CallCommitChange();
                     }
                 }
             }
