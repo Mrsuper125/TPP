@@ -9,6 +9,8 @@ public partial class Saver
         if (saved)
         {
             RequestDataErasure();
+            _fileName = null;
+            saved = false;
         }
 
         else
@@ -20,10 +22,14 @@ public partial class Saver
             {
                 SaveWithoutQuestion(saveTarget);
                 RequestDataErasure();
+                _fileName = null;
+                saved = false;
             }
             else if (dialogResult == ButtonResult.No)
             {
                 RequestDataErasure();
+                _fileName = null;
+                saved = false;
             }
         }
     }
@@ -40,6 +46,7 @@ public partial class Saver
                 return;
             }
             Load(fileName);
+            _fileName = fileName;
         }
         else
         {
@@ -56,6 +63,7 @@ public partial class Saver
                     return;
                 }
                 Load(fileName);
+                _fileName = fileName;
             }
             else if (dialogResult == ButtonResult.No)
             {
@@ -66,6 +74,7 @@ public partial class Saver
                     return;
                 }
                 Load(fileName);
+                _fileName = fileName;
             }
         }
     }
