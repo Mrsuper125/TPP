@@ -18,7 +18,7 @@ public partial class Saver
 
             if (dialogResult == ButtonResult.Yes)
             {
-                SaveWithQuestion(saveTarget);
+                SaveWithoutQuestion(saveTarget);
                 RequestDataErasure();
             }
             else if (dialogResult == ButtonResult.No)
@@ -48,7 +48,7 @@ public partial class Saver
             
             if (dialogResult == ButtonResult.Yes)
             {
-                SaveWithQuestion(saveTarget);
+                SaveWithoutQuestion(saveTarget);
                 string? fileName = await PickFile();
                 if (fileName == null)
                 {
@@ -110,7 +110,7 @@ public partial class Saver
 
             if (dialogResult == ButtonResult.Yes)
             {
-                SaveWithQuestion(saveTarget);
+                SaveWithoutQuestion(saveTarget);
                 _parentWindow.Close();
             }
             else if (dialogResult == ButtonResult.No)
