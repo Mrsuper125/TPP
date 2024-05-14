@@ -3,17 +3,13 @@ using Avalonia;
 using Avalonia.Media;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pen = Avalonia.Media.Pen;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-
-
 
 namespace Polygons
 {
     public delegate void CommitChange();
-    
+
     public partial class DrawingControl : UserControl
     {
         //TODO: получше закомментить код
@@ -43,6 +39,45 @@ namespace Polygons
             set { vertices = value; }
         }
 
+        public bool FigureIsInside(double x, double y)
+        {
+            if (vertices.Count >= 3)
+            {
+                for (int i = 0; i < vertices.Count - 1; i++)
+                {
+                        Shape first = vertices[i];
+                        double k = (y - first.Y) / (x - first.X);
+                        double b = first.Y - first.X * k;
+                        int above = 0;
+                        int below = 0;
+                        for (int l = 0; l < vertices.Count; l++)
+                        {
+                            if ((l != i))
+                            {
+                                Shape checking = vertices[l];
+                                double tempY = k * checking.X + b;
+                                if (tempY > checking.Y)
+                                {
+                                    below++;
+                                }
+
+                                if (tempY < checking.Y)
+                                {
+                                    above++;
+                                }
+                            }
+                        }
+
+                        if (above == 0 || below == 0)
+                        {
+                            return false;
+                        }
+                }
+            }
+
+            return true;
+        }
+
         public void LeftPointerPressed(double x, double y)
         {
             foreach (Shape vertex in vertices) //Проверяем все вершины на предмет клика внутри них
@@ -59,21 +94,35 @@ namespace Polygons
 
             if (!_holding) //Если ни одну вершину не захватили, создаём новую
             {
-                this.CallCommitChange();
-                switch
-                    (Globals.VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+                if (vertices.Count >= 3 && FigureIsInside(x, y))
                 {
-                    case VertexShape.Circle:
-                        vertices.Add(new CircleVertex(x, y));
-                        break;
-                    case VertexShape.Square:
-                        vertices.Add(new SquareVertex(x, y));
-                        break;
-                    case VertexShape.Triangle:
-                        vertices.Add(new TriangleVertex(x, y));
-                        break;
-                    default:
-                        throw new Exception("Wrong vertex shape");
+                    _holding = true;
+                    foreach (Shape vertex in vertices)
+                    {
+                        vertex.IsHeld = true;
+                        _previousX = x;
+                        _previousY = y;
+                    }
+                }
+                else
+                {
+                    this.CallCommitChange();
+                    switch
+                        (Globals
+                            .VertexShape) //Проверяем тип вершины из глобалсов. Нашли совпадающий - записываем его, что-то не так - Exception по мордасам, ибо нефиг непотребство пихать.
+                    {
+                        case VertexShape.Circle:
+                            vertices.Add(new CircleVertex(x, y));
+                            break;
+                        case VertexShape.Square:
+                            vertices.Add(new SquareVertex(x, y));
+                            break;
+                        case VertexShape.Triangle:
+                            vertices.Add(new TriangleVertex(x, y));
+                            break;
+                        default:
+                            throw new Exception("Wrong vertex shape");
+                    }
                 }
             }
             // по сути, этот метод теперь заменяет нам 
@@ -238,6 +287,7 @@ namespace Polygons
         }
 
         double currentDistance;
+
         private List<Shape> ShapeVertices;
 
         public void JarvisAlgorithm(DrawingContext drawingContext)
@@ -309,7 +359,6 @@ namespace Polygons
                 }
             }
         }
-
 
         public override void Render(DrawingContext drawingContext)
         {
