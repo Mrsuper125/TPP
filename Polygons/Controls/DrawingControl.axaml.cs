@@ -182,6 +182,7 @@ namespace Polygons
 
                 _previousX = x;
                 _previousY = y;
+                this.CallCommitChange();
             }
 
             InvalidateVisual();

@@ -6,7 +6,7 @@ public partial class Saver
 {
     public async void New(object saveTarget)
     {
-        if (saved)
+        if (saved) //Если сохранено, чистим молча
         {
             RequestDataErasure();
             _fileName = null;
@@ -18,7 +18,7 @@ public partial class Saver
             var dialogResult =
                 await Confirm("Save previous data? \"Yes\" for save, \"No\" for erase, \"Cancel\" to cancel operation");
 
-            if (dialogResult == ButtonResult.Yes)
+            if (dialogResult == ButtonResult.Yes) //Если надо сохранить, сохраняем
             {
                 SaveWithoutQuestion(saveTarget);
                 RequestDataErasure();
@@ -36,8 +36,7 @@ public partial class Saver
 
     public async void Open(object saveTarget)
     {
-        
-        if (saved)
+        if (saved) //Если сохранено - загружаем новый
         {
             string? fileName = await PickFile();
             if (fileName == null)
@@ -45,6 +44,7 @@ public partial class Saver
                 await Notify("No proper file name was picked");
                 return;
             }
+
             Load(fileName);
             _fileName = fileName;
         }
@@ -52,8 +52,8 @@ public partial class Saver
         {
             var dialogResult =
                 await Confirm("Save previous data? \"Yes\" for save, \"No\" for erase, \"Cancel\" to cancel operation");
-            
-            if (dialogResult == ButtonResult.Yes)
+
+            if (dialogResult == ButtonResult.Yes) //Сохраняем и загружаем
             {
                 SaveWithoutQuestion(saveTarget);
                 string? fileName = await PickFile();
@@ -62,8 +62,9 @@ public partial class Saver
                     await Notify("No proper file name was picked");
                     return;
                 }
+
                 Load(fileName);
-                _fileName = fileName;
+                _fileName = fileName; //Подгружаем имя открытого файла
             }
             else if (dialogResult == ButtonResult.No)
             {
@@ -73,21 +74,22 @@ public partial class Saver
                     await Notify("No proper file name was picked");
                     return;
                 }
+
                 Load(fileName);
-                _fileName = fileName;
+                _fileName = fileName; //Подгружаем имя открытого файла
             }
         }
     }
-    
+
     public async void SaveWithoutQuestion(object saveTarget)
     {
-        if (_fileName != null)
+        if (_fileName != null) //Только если имя файла уже было выбрано, сохраняем
         {
             Save(saveTarget);
         }
         else
         {
-            string? newName = await PickName();
+            string? newName = await PickName(); //Иначе выбираем новое имя
             if (newName != null)
             {
                 Save(saveTarget, newName);
@@ -108,7 +110,6 @@ public partial class Saver
     {
         if (saved)
         {
-            RequestDataErasure();
             _parentWindow.Close();
         }
 
